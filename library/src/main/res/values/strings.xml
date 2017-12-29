@@ -5,4 +5,10 @@
         translatable="false">
         defaultSP
     </string>
+    <string
+        name="contentProviderAuthority"
+        formatted="false"
+        translatable="false">
+        com.github.insanusmokrassar.androidutils.back.utils.database.SimpleORM.ContentProvider.CommonSQLiteContentProvider
+    </string>
 </resources>
