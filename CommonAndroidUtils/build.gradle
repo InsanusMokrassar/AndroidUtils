@@ -1,14 +1,18 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.github.insanusmokrassar'
+version = 1
 
 android {
     compileSdkVersion 27
     buildToolsVersion build_tools_version
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode version
+        versionName "${version/10}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -54,4 +58,14 @@ dependencies {
 
     // Common. Trusted.
     implementation 'com.mcxiaoke.volley:library:1.0.19'
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            group project.group
+            artifactId project.name
+            version "${version/10}"
+        }
+    }
 }
