@@ -21,8 +21,8 @@ open class SimpleDatabase<M: Any> (
         version: Int,
         private val defaultOrderBy: String? = null
 ) {
-    private val contextReference = WeakReference(context)
-    private val providerUri =
+    protected val contextReference = WeakReference(context)
+    protected val providerUri =
             providerUri(
                     context.getString(R.string.contentProviderAuthority),
                     databaseName,
