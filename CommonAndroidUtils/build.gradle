@@ -65,7 +65,7 @@ install {
         pom.project {
             group project.group
             artifactId project.name
-            version "${version/10}"
+            version "${project.version/10}"
         }
     }
 }
