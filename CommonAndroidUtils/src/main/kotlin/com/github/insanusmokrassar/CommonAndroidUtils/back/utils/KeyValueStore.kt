@@ -1,12 +1,9 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.back.utils.database
+package com.github.insanusmokrassar.CommonAndroidUtils.back.utils
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
-import com.github.insanusmokrassar.CommonAndroidUtils.back.utils.canBeSerializable
-import com.github.insanusmokrassar.CommonAndroidUtils.back.utils.deserialize
-import com.github.insanusmokrassar.CommonAndroidUtils.back.utils.serialize
 import java.io.Serializable
 
 private val cache = HashMap<String, MutableMap<String, KeyValueStore>>()

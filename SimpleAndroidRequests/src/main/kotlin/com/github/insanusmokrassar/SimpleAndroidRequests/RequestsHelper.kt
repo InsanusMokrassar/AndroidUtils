@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.back.utils.requests
+package com.github.insanusmokrassar.SimpleAndroidRequests
 
 import android.app.Application
 import android.content.Context
@@ -18,8 +18,9 @@ private val cache = HashMap<String, RequestsHelper>()
 fun Application.getRequestsHelper(): RequestsHelper {
     synchronized(cache, {
         return cache[this.packageName] ?: {
-            cache[this.packageName] = RequestsHelper(this)
-            cache[this.packageName]!!
+            val current = RequestsHelper(this)
+            cache[this.packageName] = current
+            current
         }()
     })
 }

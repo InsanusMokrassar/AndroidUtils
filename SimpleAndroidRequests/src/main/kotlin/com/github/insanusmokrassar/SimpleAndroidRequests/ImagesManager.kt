@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.back.utils.requests
+package com.github.insanusmokrassar.SimpleAndroidRequests
 
 import android.app.Application
 import android.content.Context
