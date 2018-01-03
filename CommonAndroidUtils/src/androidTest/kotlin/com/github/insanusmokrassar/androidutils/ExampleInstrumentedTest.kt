@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.androidutils
+package com.github.insanusmokrassar.CommonAndroidUtils
 
 import android.content.Context
 import android.support.test.InstrumentationRegistry
@@ -22,6 +22,6 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
 
-        assertEquals("com.github.insanusmokrassar.androidutils", appContext.packageName)
+        assertEquals("com.github.insanusmokrassar.CommonAndroidUtils", appContext.packageName)
     }
 }

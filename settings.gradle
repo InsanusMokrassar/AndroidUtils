@@ -1,1 +1,1 @@
-include ':CommonAndroidUtils'
+include ':CommonAndroidUtils', ':SimpleAndroidORM'

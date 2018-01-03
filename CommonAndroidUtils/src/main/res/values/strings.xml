@@ -9,6 +9,6 @@
         name="contentProviderAuthority"
         formatted="false"
         translatable="false">
-        com.github.insanusmokrassar.androidutils.back.utils.database.SimpleORM.ContentProvider.CommonSQLiteContentProvider
+        com.github.insanusmokrassar.CommonAndroidUtils.back.utils.database.SimpleORM.ContentProvider.CommonSQLiteContentProvider
     </string>
 </resources>

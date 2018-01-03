@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.androidutils
+package com.github.insanusmokrassar.CommonAndroidUtils
 
 import org.junit.Test
 
