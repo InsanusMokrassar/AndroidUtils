@@ -81,7 +81,8 @@ fun <T> Context.createRecyclerViewDialog(
 fun <T: View> Context.createCustomViewDialog(
         viewCreator: (Context) -> T,
         positivePair: Pair<Int, (DialogInterface) -> Unit>? = null,
-        negativePair: Pair<Int, (DialogInterface) -> Unit>? = null): AlertDialog {
+        negativePair: Pair<Int, (DialogInterface) -> Unit>? = null
+): AlertDialog {
     val builder = AlertDialog.Builder(this)
 
     builder.setView(viewCreator(this))
@@ -98,9 +99,10 @@ fun <T: View> Context.createCustomViewDialog(
 
 fun Context.createEditTextDialog(
         callback: (String) -> Boolean,
-        titleRes: Int,
+        titleRes: Int? = null,
         editTextHintRes: Int? = null,
-        inputType: Int = InputType.TYPE_CLASS_TEXT): AlertDialog {
+        inputType: Int = InputType.TYPE_CLASS_TEXT
+): AlertDialog {
 
     val editText = EditText(this)
     val lp = LinearLayout.LayoutParams(
@@ -117,7 +119,6 @@ fun Context.createEditTextDialog(
     val builder = AlertDialog.Builder(this)
 
     builder.setView(editText)
-            .setTitle(titleRes)
             .setPositiveButton(
                     this.getString(android.R.string.ok),
                     {
@@ -127,6 +128,9 @@ fun Context.createEditTextDialog(
                         }
                     }
             )
+    titleRes ?.let {
+        builder.setTitle(it)
+    }
     return builder.create()
 }
 
