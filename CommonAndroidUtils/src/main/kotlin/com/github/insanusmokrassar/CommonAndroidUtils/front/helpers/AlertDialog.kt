@@ -35,12 +35,13 @@ fun Context.createSimpleTextDialog(
         builder.setNegativeButton(negativeButtonRes, { di, _ -> negativeCallback(di) })
     }
 
-    val dialog = builder.create()
-
-    if (show) {
+    return if (show) {
+        val dialog = builder.create()
         dialog.show()
+        dialog
+    } else {
+        builder.create()
     }
-    return dialog
 }
 
 fun <T> Context.createRecyclerViewDialog(
@@ -51,7 +52,8 @@ fun <T> Context.createRecyclerViewDialog(
                 viewType: Int,
                 adapter: RecyclerViewAdapter<T>
         ) -> AbstractViewHolder<T>,
-        layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this),
+        show: Boolean = true
 ): AlertDialog {
     val recyclerView = RecyclerView(this)
     val lp = LinearLayout.LayoutParams(
@@ -75,33 +77,21 @@ fun <T> Context.createRecyclerViewDialog(
     builder.setView(recyclerView)
             .setTitle(titleRes)
 
-    return builder.create()
-}
-
-fun <T: View> Context.createCustomViewDialog(
-        viewCreator: (Context) -> T,
-        positivePair: Pair<Int, (DialogInterface) -> Unit>? = null,
-        negativePair: Pair<Int, (DialogInterface) -> Unit>? = null
-): AlertDialog {
-    val builder = AlertDialog.Builder(this)
-
-    builder.setView(viewCreator(this))
-
-    positivePair ?. let {
-        builder.setPositiveButton(getString(it.first), { di, _ -> it.second(di) })
+    return if (show) {
+        val dialog = builder.create()
+        dialog.show()
+        dialog
+    } else {
+        builder.create()
     }
-    negativePair ?. let {
-        builder.setNegativeButton(getString(it.first), { di, _ -> it.second(di) })
-    }
-
-    return builder.create()
 }
 
 fun Context.createEditTextDialog(
         callback: (String) -> Boolean,
         titleRes: Int? = null,
         editTextHintRes: Int? = null,
-        inputType: Int = InputType.TYPE_CLASS_TEXT
+        inputType: Int = InputType.TYPE_CLASS_TEXT,
+        show: Boolean = true
 ): AlertDialog {
 
     val editText = EditText(this)
@@ -131,7 +121,40 @@ fun Context.createEditTextDialog(
     titleRes ?.let {
         builder.setTitle(it)
     }
-    return builder.create()
+
+    return if (show) {
+        val dialog = builder.create()
+        dialog.show()
+        dialog
+    } else {
+        builder.create()
+    }
+}
+
+fun <T: View> Context.createCustomViewDialog(
+        viewCreator: (Context) -> T,
+        positivePair: Pair<Int, (DialogInterface) -> Unit>? = null,
+        negativePair: Pair<Int, (DialogInterface) -> Unit>? = null,
+        show: Boolean = true
+): AlertDialog {
+    val builder = AlertDialog.Builder(this)
+
+    builder.setView(viewCreator(this))
+
+    positivePair ?. let {
+        builder.setPositiveButton(getString(it.first), { di, _ -> it.second(di) })
+    }
+    negativePair ?. let {
+        builder.setNegativeButton(getString(it.first), { di, _ -> it.second(di) })
+    }
+
+    return if (show) {
+        val dialog = builder.create()
+        dialog.show()
+        dialog
+    } else {
+        builder.create()
+    }
 }
 
 fun AlertDialog.setDismissChecker(checker: () -> Boolean) : AlertDialog {
