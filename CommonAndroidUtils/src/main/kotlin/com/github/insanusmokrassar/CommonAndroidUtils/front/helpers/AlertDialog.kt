@@ -16,8 +16,8 @@ import com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.Recyc
 import com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.RecyclerView.RecyclerViewAdapter
 
 fun Context.createSimpleTextDialog(
-        titleRes: Int,
-        textRes: Int,
+        title: String,
+        text: String,
         positiveButtonTextRes: Int = 0,
         negativeButtonRes: Int = 0,
         positiveCallback: (DialogInterface) -> Unit = { it.dismiss() },
@@ -26,8 +26,8 @@ fun Context.createSimpleTextDialog(
 ): AlertDialog {
     val builder = AlertDialog.Builder(this)
 
-    builder.setTitle(titleRes)
-            .setMessage(textRes)
+    builder.setTitle(title)
+            .setMessage(text)
     if (positiveButtonTextRes != 0) {
         builder.setPositiveButton(positiveButtonTextRes, { di, _ -> positiveCallback(di) })
     }
