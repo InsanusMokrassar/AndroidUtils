@@ -159,16 +159,14 @@ class SimpleRequest(
 
 fun constructServerRequestUrl(
         c: Context,
-        stringResId: Int,
-        vararg params: String,
-        requestUrlFormatResId: Int,
-        requestUrlFormatPostfixResId: Int
+        requestUrlTemplateResId: Int,
+        requestUrlTemplatePostfixResId: Int,
+        vararg params: String
 ): String {
     return String.format(
-            c.getString(requestUrlFormatResId),
-            c.getString(requestUrlFormatPostfixResId),
+            c.getString(requestUrlTemplateResId),
             String.format(
-                    c.getString(stringResId),
+                    c.getString(requestUrlTemplatePostfixResId),
                     *params
             )
     )
