@@ -2,6 +2,7 @@
 <resources>
     <color name="shadowBackgroundColor">#80aaaaaa</color>
 
-    <color name="positiveButtonColor">#aa4caf50</color>
-    <color name="negativeButtonColor">#aaff0000</color>
+    <color name="positiveColor">#aa4caf50</color>
+    <color name="warningColor">#aaf2fd02</color>
+    <color name="negativeColor">#aaff0000</color>
 </resources>
