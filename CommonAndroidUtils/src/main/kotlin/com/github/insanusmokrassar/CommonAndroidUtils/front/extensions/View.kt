@@ -1,5 +1,8 @@
 package com.github.insanusmokrassar.CommonAndroidUtils.front.extensions
 
+import android.content.res.ColorStateList
+import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
 import android.util.Log
 import android.view.View
 import com.github.insanusmokrassar.CommonAndroidUtils.R
@@ -22,6 +25,18 @@ fun <R : View> View.findNestedViewById(vararg viewsIds : Int): R? {
         Log.e(TAG(), "Can not resolve nested view: $viewsIds; in $this")
     }
     return null
+}
+
+fun View.setBackgroundTint(color: Int) {
+    ViewCompat.setBackgroundTintList(
+            this,
+            ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                            this.context,
+                            color
+                    )
+            )
+    )
 }
 
 fun View.showProgressBar() {
