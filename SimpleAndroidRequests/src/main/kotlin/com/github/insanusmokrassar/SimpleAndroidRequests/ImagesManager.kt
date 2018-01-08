@@ -75,8 +75,8 @@ class CacheManager internal constructor(
 
     fun loadImage(requestUrl: String,
                   targetView: ImageView,
-                  defaultResource: Int,
-                  errorResource: Int,
+                  defaultResource: Int = R.drawable.ic_default_image,
+                  errorResource: Int = R.drawable.ic_broken_image,
                   maxWidth: Int? = null,
                   maxHeight: Int? = null,
                   scaleType: ImageView.ScaleType? = ImageView.ScaleType.CENTER_INSIDE
