@@ -8,20 +8,26 @@ class DefaultErrorListener<T> (
         val defaultHandler: (T) -> Unit = { },
         val errorConverter: (String) -> List<T> = { emptyList() },
         val handlers: Map<T, (T) -> Unit> = emptyMap()
-): Response.ErrorListener {
+): Response.ErrorListener, (String) -> Unit {
+    override fun invoke(errorString: String) {
+        errorConverter(
+                errorString
+        ).forEach {
+            error ->
+            handlers[error] ?.let {
+                it(error)
+            } ?: defaultHandler(error)
+        }
+    }
+
     override fun onErrorResponse(error: VolleyError?) {
         error ?.let {
-            errorConverter(
+            invoke(
                     it
                             .networkResponse
                             .data
                             .toString(Charset.defaultCharset())
-            ).forEach {
-                error ->
-                handlers[error] ?.let {
-                    it(error)
-                } ?: defaultHandler(error)
-            }
+            )
         }
     }
 }
