@@ -4,30 +4,35 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import java.nio.charset.Charset
 
+fun tryToExtractServerErrorBody(
+        error: VolleyError,
+        charset: Charset = Charset.defaultCharset()
+): String? {
+    return try {
+        error
+                .networkResponse
+                .data
+                .toString(
+                        charset
+                )
+    } catch (e: Exception) {
+        null
+    }
+}
+
 class DefaultErrorListener<T> (
         private val defaultHandler: (T) -> Unit = { },
-        private val errorConverter: (String) -> List<T> = { emptyList() },
+        private val errorConverter: (VolleyError?) -> List<T> = { emptyList() },
         private val handlers: Map<T, (T) -> Unit> = emptyMap()
-): Response.ErrorListener, (String) -> Unit {
-    override fun invoke(errorString: String) {
+): Response.ErrorListener {
+    override fun onErrorResponse(error: VolleyError?) {
         errorConverter(
-                errorString
+                error
         ).forEach {
             error ->
             handlers[error] ?.let {
                 it(error)
             } ?: defaultHandler(error)
-        }
-    }
-
-    override fun onErrorResponse(error: VolleyError?) {
-        error ?.let {
-            invoke(
-                    it
-                            .networkResponse
-                            .data
-                            .toString(Charset.defaultCharset())
-            )
         }
     }
 }
