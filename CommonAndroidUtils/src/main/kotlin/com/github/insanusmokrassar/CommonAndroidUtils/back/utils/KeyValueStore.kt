@@ -3,6 +3,7 @@ package com.github.insanusmokrassar.CommonAndroidUtils.back.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
+import com.github.insanusmokrassar.IObjectK.realisations.ConcurrentSimpleCommonIObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
 import java.io.Serializable
 
@@ -82,7 +83,7 @@ class KeyValueStore internal constructor (
 
     @Synchronized
     override fun keys(): Set<String> {
-        return cachedData.keys()
+        return cachedData.keys().toSet()
     }
 
     @Synchronized
