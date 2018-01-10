@@ -36,8 +36,6 @@ class KeyValueStore internal constructor (
 
     private val cachedData = SimpleIObject()
 
-    private val syncObject = Object()
-
     init {
         sharedPreferences.all.forEach {
             if (it.value != null) {
@@ -48,68 +46,62 @@ class KeyValueStore internal constructor (
     }
 
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String) {
-        synchronized(syncObject, {
-            val value = sp.all[key]
-            if (value != null) {
-                cachedData.put(key, value)
-            } else {
-                cachedData.remove(key)
-            }
-        })
+        val value = sp.all[key]
+        if (value != null) {
+            cachedData.put(key, value)
+        } else {
+            cachedData.remove(key)
+        }
     }
 
+    @Synchronized
     override fun put(key: String, value: Any) {
-        synchronized(syncObject, {
-            sharedPreferences.edit()
-                    .put(key, value)
-                    .apply()
-        })
+        sharedPreferences.edit()
+                .put(key, value)
+                .apply()
     }
 
+    @Synchronized
     override fun <T: Any> get(key: String): T {
-        synchronized(syncObject, {
-            val value = cachedData.get<Any>(key)
-            return when(value) {
-                !is String -> value
-                else -> {
-                    if (canBeSerializable(value)) {
-                        try {
-                            deserialize<Serializable>(value)
-                        } catch (e: ClassCastException) {
-                            value
-                        }
-                    } else {
+        val value = cachedData.get<Any>(key)
+        return when(value) {
+            !is String -> value
+            else -> {
+                if (canBeSerializable(value)) {
+                    try {
+                        deserialize<Serializable>(value)
+                    } catch (e: ClassCastException) {
                         value
                     }
+                } else {
+                    value
                 }
-            } as T
-        })
-    }
-
-    override fun keys(): Set<String> {
-        synchronized(syncObject, {
-            return cachedData.keys()
-        })
-    }
-
-    override fun putAll(toPutMap: Map<String, Any>) {
-        synchronized(syncObject, {
-            val editor = sharedPreferences.edit()
-            toPutMap.forEach {
-                editor.put(it.key, it.value)
             }
-            editor.apply()
-        })
+        } as T
     }
 
+    @Synchronized
+    override fun keys(): Set<String> {
+        return cachedData.keys()
+    }
+
+    @Synchronized
+    override fun putAll(toPutMap: Map<String, Any>) {
+        val editor = sharedPreferences.edit()
+        toPutMap.forEach {
+            editor.put(it.key, it.value)
+        }
+        editor.apply()
+    }
+
+    @Synchronized
     override fun remove(key: String) {
-        synchronized(syncObject, {
-            sharedPreferences.edit()
-                    .remove(key)
-                    .apply()
-        })
+        sharedPreferences.edit()
+                .remove(key)
+                .apply()
     }
 
+    @Synchronized
     private fun SharedPreferences.Editor.put(key: String, value: Any): SharedPreferences.Editor {
         when(value) {
             is Int -> putInt(key, value)
