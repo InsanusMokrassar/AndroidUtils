@@ -105,7 +105,7 @@ class RequestsHelper internal constructor (c: Context) {
     }
 }
 
-open class SimpleRequest(
+class SimpleRequest(
         url: String,
         method: Int,
         successResponse: (String) -> Unit,
@@ -161,22 +161,6 @@ open class SimpleRequest(
     }
 
     override fun getPriority(): Priority = priority
-}
-
-class MultipartRequest(
-        url: String,
-        method: Int,
-        successResponse: (String) -> Unit,
-        errorListener: Response.ErrorListener,
-        private val data: ByteArray,
-        paramsBuilder: () -> IObject<Any> = { SimpleIObject() },
-        priority: Request.Priority = Request.Priority.NORMAL
-) : SimpleRequest(url, method, successResponse, errorListener, paramsBuilder, priority) {
-    override fun getBodyContentType(): String {
-        return "multipart/form-data"
-    }
-
-    override fun getBody(): ByteArray = data
 }
 
 fun constructServerRequestUrl(
