@@ -28,7 +28,7 @@ fun Application.getRequestsHelper(): RequestsHelper {
 class RequestsHelper internal constructor (c: Context) {
     private val executeQueue = Volley.newRequestQueue(c)
     private var readyToSend = true
-    private val requestsQueue = ArrayList<Request<String>>()
+    private val requestsQueue = ArrayList<Request<*>>()
 
     private val sync = Object()
     private val syncQueuesThread = Thread({
@@ -68,21 +68,28 @@ class RequestsHelper internal constructor (c: Context) {
             paramsBuilder: () -> IObject<Any> = { SimpleIObject() },
             priority: Request.Priority = Request.Priority.NORMAL
     ) {
+        Log.i("Requests bus", "Try to add request for: $url")
+        val request = SimpleRequest(
+                url,
+                method,
+                successResponse,
+                errorListener,
+                paramsBuilder,
+                priority
+        )
+        execute(request)
+    }
+
+    fun <T> execute(
+            request: Request<T>
+    ) {
         try {
-            Log.i("Requests bus", "Try to add request for: $url")
+            Log.i("Requests bus", "Try to add request: $request")
             synchronized(sync, {
-                val request = SimpleRequest(
-                        url,
-                        method,
-                        successResponse,
-                        errorListener,
-                        paramsBuilder,
-                        priority
-                )
                 request.sequence = executeQueue.sequenceNumber
                 requestsQueue.add(request)
                 requestsQueue.sortWith(
-                        Comparator { first, second -> first.compareTo(second) }
+                        Comparator { first, second -> first.priority.compareTo(second.priority) }
                 )
                 sync.notify()
             })
@@ -114,7 +121,6 @@ class SimpleRequest(
         },
         errorListener
 ) {
-
     private val realParams: IObject<Any>
         get() {
             val params = paramsBuilder()
