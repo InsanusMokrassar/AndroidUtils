@@ -137,54 +137,44 @@ fun Context.createEditTextDialog(
 fun Context.createSimpleCheckBoxesDialog(
         title: String? = null,
         variants: List<String>,
-        checked: List<String> = emptyList(),
-        callback: (List<String>) -> Unit = {  },
+        checked: MutableList<String> = mutableListOf(),
         positivePair: Pair<Int, ((DialogInterface) -> Unit)?>? = null,
         negativePair: Pair<Int, ((DialogInterface) -> Unit)?>? = null,
         show: Boolean = true
 ): AlertDialog {
-    var checkBoxesContainer: ViewGroup? = null
+    val builder = AlertDialog.Builder(this)
 
-    val alertDialog = createCustomViewDialog(
-            title,
-            {
-                c ->
-                val view = LayoutInflater.from(c)
-                        .inflate(R.layout.dialog_check_boxes, null, false)
-                checkBoxesContainer = view.findViewById(R.id.dialogCheckBoxesContainer)
-
-                variants.forEach {
-                    val currentCheckBox = AppCompatCheckBox(c)
-                    currentCheckBox.text = it
-                    currentCheckBox.isChecked = checked.contains(it)
-                    checkBoxesContainer ?. addView(
-                            currentCheckBox
-                    )
-                }
-
-                view
-            },
-            positivePair,
-            negativePair,
-            show
-    )
-
-    alertDialog.setOnDismissListener {
-        val list = ArrayList<String>()
-        checkBoxesContainer ?.let {
-            checkBoxesContainer ->
-            (0 until checkBoxesContainer.childCount).forEach {
-                (checkBoxesContainer.getChildAt(it) as? CheckBox) ?.let {
-                    if (it.isChecked) {
-                        list.add(it.text.toString())
-                    }
-                }
-            }
-        }
-        callback(list)
+    title ?.let {
+        builder.setTitle(title)
     }
 
-    return alertDialog
+    builder.setMultiChoiceItems(
+            variants.toTypedArray(),
+            variants.map { checked.contains(it) }.toBooleanArray(),
+            {
+                dialog, i, isChecked ->
+                if (isChecked) {
+                    checked.add(variants[i])
+                } else {
+                    checked.remove(variants[i])
+                }
+            }
+    )
+
+    positivePair ?. let {
+        builder.setPositiveButton(getString(it.first), { di, _ -> it.second ?. invoke(di) })
+    }
+    negativePair ?. let {
+        builder.setNegativeButton(getString(it.first), { di, _ -> it.second ?. invoke(di) })
+    }
+
+    return if (show) {
+        val dialog = builder.create()
+        dialog.show()
+        dialog
+    } else {
+        builder.create()
+    }
 }
 
 fun <T: View> Context.createCustomViewDialog(
