@@ -66,8 +66,7 @@ class RequestsHelper internal constructor (c: Context) {
             successResponse: (String) -> Unit,
             errorListener: Response.ErrorListener,
             paramsBuilder: () -> IObject<Any> = { SimpleIObject() },
-            priority: Request.Priority = Request.Priority.NORMAL,
-            contentType: String? = null
+            priority: Request.Priority = Request.Priority.NORMAL
     ) {
         Log.i("Requests bus", "Try to add request for: $url")
         val request = SimpleRequest(
@@ -76,8 +75,7 @@ class RequestsHelper internal constructor (c: Context) {
                 successResponse,
                 errorListener,
                 paramsBuilder,
-                priority,
-                contentType
+                priority
         )
         execute(request)
     }
@@ -113,8 +111,7 @@ class SimpleRequest(
         successResponse: (String) -> Unit,
         errorListener: Response.ErrorListener,
         private val paramsBuilder: () -> IObject<Any> = { SimpleIObject() },
-        private val priority: Request.Priority = Request.Priority.NORMAL,
-        private val contentType: String? = null
+        private val priority: Request.Priority = Request.Priority.NORMAL
 ): StringRequest(
         method,
         url,
@@ -162,8 +159,6 @@ class SimpleRequest(
     override fun getParams(): MutableMap<String, String> {
         return realParams.toStringMap().toMutableMap()
     }
-
-    override fun getBodyContentType(): String = contentType ?: super.getBodyContentType()
 
     override fun getPriority(): Priority = priority
 }
