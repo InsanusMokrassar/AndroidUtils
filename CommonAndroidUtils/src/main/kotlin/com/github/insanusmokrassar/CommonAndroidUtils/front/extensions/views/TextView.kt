@@ -9,11 +9,18 @@ import android.widget.TextView
 fun TextView.setLinkText(
         text: String,
         onClickAction: (View) -> Unit = {},
-        color: Int = Color.BLUE
+        underline: Boolean = true,
+        color: Int? = Color.BLUE
 ) {
-    val content = SpannableString(text)
-    content.setSpan(UnderlineSpan(), 0, text.length, 0)
-    this.text = content
-    this.setTextColor(color)
+    this.text = if (underline) {
+        val content = SpannableString(text)
+        content.setSpan(UnderlineSpan(), 0, text.length, 0)
+        content
+    } else {
+        text
+    }
+    color ?. let {
+        this.setTextColor(color)
+    }
     this.setOnClickListener(onClickAction)
 }
