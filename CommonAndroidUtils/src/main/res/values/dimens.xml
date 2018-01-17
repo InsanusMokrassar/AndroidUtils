@@ -6,9 +6,21 @@
     <dimen name="textDefaultLargeSize">22sp</dimen>
     <dimen name="textDefaultExtraLargeSize">26sp</dimen>
 
-    <dimen name="viewDefaultExtraSmallMargin">2dp</dimen>
-    <dimen name="viewDefaultSmallMargin">4dp</dimen>
-    <dimen name="viewDefaultMediumMargin">8dp</dimen>
-    <dimen name="viewDefaultLargeMargin">16dp</dimen>
-    <dimen name="viewDefaultExtraLargeMargin">32dp</dimen>
+    <dimen name="viewDefaultExtraSmallSize">2dp</dimen>
+    <dimen name="viewDefaultSmallSize">4dp</dimen>
+    <dimen name="viewDefaultMediumSize">8dp</dimen>
+    <dimen name="viewDefaultLargeSize">16dp</dimen>
+    <dimen name="viewDefaultExtraLargeSize">32dp</dimen>
+
+    <dimen name="viewDefaultExtraSmallMargin">@dimen/viewDefaultExtraSmallSize</dimen>
+    <dimen name="viewDefaultSmallMargin">@dimen/viewDefaultSmallSize</dimen>
+    <dimen name="viewDefaultMediumMargin">@dimen/viewDefaultMediumSize</dimen>
+    <dimen name="viewDefaultLargeMargin">@dimen/viewDefaultLargeSize</dimen>
+    <dimen name="viewDefaultExtraLargeMargin">@dimen/viewDefaultExtraLargeSize</dimen>
+
+    <dimen name="iconDefaultExtraSmallSize">18dp</dimen>
+    <dimen name="iconDefaultSmallSize">24dp</dimen>
+    <dimen name="iconDefaultMediumSize">32dp</dimen>
+    <dimen name="iconDefaultLargeSize">48dp</dimen>
+    <dimen name="iconDefaultExtraLargeSize">64dp</dimen>
 </resources>
