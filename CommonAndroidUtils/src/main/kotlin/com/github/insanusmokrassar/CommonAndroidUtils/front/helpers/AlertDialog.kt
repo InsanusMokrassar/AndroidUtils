@@ -2,17 +2,13 @@ package com.github.insanusmokrassar.CommonAndroidUtils.front.helpers
 
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Build
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.AppCompatCheckBox
+import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.InputType
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.LinearLayout
 import com.github.insanusmokrassar.CommonAndroidUtils.R
 import com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.RecyclerView.AbstractViewHolder
@@ -77,8 +73,8 @@ fun <T> Context.createRecyclerViewDialog(
 
     val builder = AlertDialog.Builder(this)
 
-    builder.setView(recyclerView)
-            .setTitle(titleRes)
+    builder.setTitle(titleRes)
+            .setView(recyclerView)
 
     return if (show) {
         val dialog = builder.create()
@@ -97,7 +93,7 @@ fun Context.createEditTextDialog(
         show: Boolean = true
 ): AlertDialog {
 
-    val editText = EditText(this)
+    val editText = AppCompatEditText(this)
     val lp = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
