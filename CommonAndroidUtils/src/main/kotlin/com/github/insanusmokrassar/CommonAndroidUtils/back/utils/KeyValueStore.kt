@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
 import com.github.insanusmokrassar.IObjectK.realisations.ConcurrentSimpleCommonIObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
+import com.github.insanusmokrassar.IObjectK.realisations.StandardIInputObjectIterator
 import java.io.Serializable
 
 private val cache = HashMap<String, MutableMap<String, KeyValueStore>>()
@@ -56,7 +57,7 @@ class KeyValueStore internal constructor (
     }
 
     @Synchronized
-    override fun put(key: String, value: Any) {
+    override fun set(key: String, value: Any) {
         sharedPreferences.edit()
                 .put(key, value)
                 .apply()
@@ -100,6 +101,11 @@ class KeyValueStore internal constructor (
         sharedPreferences.edit()
                 .remove(key)
                 .apply()
+    }
+
+    @Synchronized
+    override fun iterator(): Iterator<Pair<String, Any>> {
+        return StandardIInputObjectIterator(this)
     }
 
     @Synchronized
