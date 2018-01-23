@@ -5,6 +5,9 @@ buildscript {
     ext.kotlin_coroutines_version = '0.19.3'
     ext.build_tools_version = '27.0.1'
 
+    ext.iobject_version = '1.9'
+    ext.iobject_realisations_version = '1.9.1'
+
     repositories {
         jcenter()
         mavenLocal()

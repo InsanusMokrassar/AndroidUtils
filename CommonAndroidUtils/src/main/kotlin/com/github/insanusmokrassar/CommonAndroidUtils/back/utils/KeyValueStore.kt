@@ -104,11 +104,6 @@ class KeyValueStore internal constructor (
     }
 
     @Synchronized
-    override fun iterator(): Iterator<Pair<String, Any>> {
-        return StandardIInputObjectIterator(this)
-    }
-
-    @Synchronized
     private fun SharedPreferences.Editor.put(key: String, value: Any): SharedPreferences.Editor {
         when(value) {
             is Int -> putInt(key, value)

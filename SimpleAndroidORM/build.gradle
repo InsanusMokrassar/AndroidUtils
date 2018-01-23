@@ -50,10 +50,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     // Github. Trusted.
-    implementation ('com.github.insanusmokrassar:IObjectKRealisations:1.9.0', {
+    implementation ("com.github.insanusmokrassar:IObjectKRealisations:$iobject_realisations_version", {
         exclude group: 'org.json', module: 'json'
     })
-    implementation 'com.github.insanusmokrassar:IObjectK:1.8'
+    implementation "com.github.insanusmokrassar:IObjectK:$iobject_version"
     implementation 'com.github.insanusmokrassar:CommonAndroidUtils:0.1'
 
     // RX
