@@ -6,18 +6,22 @@ import kotlinx.coroutines.experimental.launch
 
 open class EditTextManager<T>(
         private val view: EditText,
-        private val validChecker: (T) -> Boolean = { true },
-        private val textTransformationSet: (T) -> String,
-        private val textTransformationGet: (String) -> T
+        private val validChecker: (T, EditTextManager<T>) -> Boolean = {
+            _, _ ->
+            true
+        },
+        private val textTransformationSet: (T, EditTextManager<T>) -> String,
+        private val textTransformationGet: (String, EditTextManager<T>) -> T
 ) {
     var text: T?
         get() = textTransformationGet(
-                view.text.toString()
+                view.text.toString(),
+                this
         )
         set(value) {
             value ?.let {
                 launch (UI) {
-                    val text = textTransformationSet(it)
+                    val text = textTransformationSet(it, this@EditTextManager)
                     view.text.apply {
                         clear()
                         insert(0, text)
@@ -32,7 +36,7 @@ open class EditTextManager<T>(
 
     val isCorrect: Boolean
         get() = text ?.let {
-            validChecker(it)
+            validChecker(it, this)
         } ?: false
     val correctOrNull: T?
         get() = if (isCorrect) {
