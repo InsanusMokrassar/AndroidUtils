@@ -1,16 +1,16 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.front.utils
+package com.github.insanusmokrassar.CommonAndroidUtils.front.utils.EditTextManager
 
 import android.widget.EditText
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
-class EditTextManager(
+open class EditTextManager<T>(
         private val view: EditText,
-        private val validChecker: (String) -> Boolean = { true },
-        private val textTransformationSet: (String) -> String = { it },
-        private val textTransformationGet: (String) -> String = { it }
+        private val validChecker: (T) -> Boolean = { true },
+        private val textTransformationSet: (T) -> String,
+        private val textTransformationGet: (String) -> T
 ) {
-    var text: String?
+    var text: T?
         get() = textTransformationGet(
                 view.text.toString()
         )
@@ -34,7 +34,7 @@ class EditTextManager(
         get() = text ?.let {
             validChecker(it)
         } ?: false
-    val correctOrNull: String?
+    val correctOrNull: T?
         get() = if (isCorrect) {
             text
         } else {
@@ -48,3 +48,4 @@ class EditTextManager(
             }
         }
 }
+
