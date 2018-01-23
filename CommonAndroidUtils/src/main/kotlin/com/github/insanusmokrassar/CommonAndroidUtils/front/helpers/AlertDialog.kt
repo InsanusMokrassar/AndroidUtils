@@ -106,28 +106,30 @@ fun Context.createEditTextDialog(
     }
 
     val builder = AlertDialog.Builder(this)
-
+    var canBeClosed = true
     builder.setView(editText)
             .setPositiveButton(
                     this.getString(android.R.string.ok),
                     {
-                        dialog, _ ->
-                        if (callback(editText.text.toString())) {
-                            dialog.dismiss()
-                        }
+                        _, _ ->
+                        canBeClosed = callback(editText.text.toString())
                     }
             )
     titleRes ?.let {
         builder.setTitle(it)
     }
+    val dialog = builder.create()
 
-    return if (show) {
-        val dialog = builder.create()
-        dialog.show()
-        dialog
-    } else {
-        builder.create()
+    dialog.setDismissChecker {
+        val toReturn = canBeClosed
+        canBeClosed = true
+        toReturn
     }
+
+    if (show) {
+        dialog.show()
+    }
+    return dialog
 }
 
 fun Context.createSimpleCheckBoxesDialog(
