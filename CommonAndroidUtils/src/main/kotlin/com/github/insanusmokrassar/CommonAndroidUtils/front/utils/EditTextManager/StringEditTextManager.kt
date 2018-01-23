@@ -2,7 +2,7 @@ package com.github.insanusmokrassar.CommonAndroidUtils.front.utils.EditTextManag
 
 import android.widget.EditText
 
-class StringEditTextManager(
+open class StringEditTextManager(
         view: EditText,
         validChecker: (String) -> Boolean = { true },
         textTransformationSet: (String) -> String = { it },
