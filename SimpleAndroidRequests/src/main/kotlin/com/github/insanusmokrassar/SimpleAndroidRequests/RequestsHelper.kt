@@ -12,6 +12,8 @@ import com.github.insanusmokrassar.IObjectK.interfaces.IObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
 import com.github.insanusmokrassar.IObjectKRealisations.toStringMap
 import com.github.insanusmokrassar.CommonAndroidUtils.common.extensions.TAG
+import com.github.insanusmokrassar.IObjectK.extensions.asMutableMap
+import com.github.insanusmokrassar.IObjectK.extensions.iterator
 
 private val cache = HashMap<String, RequestsHelper>()
 
@@ -130,6 +132,26 @@ class SimpleRequest(
             return params
         }
 
+    private val adaptedParams: IObject<Any>
+        get() {
+            return if (method == Request.Method.POST) {
+                val result = SimpleIObject()
+                realParams.iterator().forEach {
+                    val value = it.second
+                    when (value) {
+                        is Array<*> -> value.forEachIndexed {
+                            i, current ->
+                            result["${it.first}[$i]"]=current!!
+                        }
+                        else -> result[it.first] = it.second
+                    }
+                }
+                result
+            } else {
+                realParams
+            }
+        }
+
     override fun getUrl(): String {
         val currentUrl = super.getUrl()
         return if (method == Request.Method.GET) {
@@ -157,7 +179,7 @@ class SimpleRequest(
     }
 
     override fun getParams(): MutableMap<String, String> {
-        return realParams.toStringMap().toMutableMap()
+        return adaptedParams.toStringMap().toMutableMap()
     }
 
     override fun getPriority(): Priority = priority
