@@ -64,7 +64,7 @@ private fun createFile(absolutePath: String): File {
 
 class CacheManager internal constructor(
         context: Context,
-        private val absolutePath: String = context.getCacheDirectoryPath()
+        absolutePath: String = context.getCacheDirectoryPath()
 ) {
     private val requestsQueue: RequestQueue = Volley.newRequestQueue(context)
     private val loader: ImageLoader
@@ -98,26 +98,6 @@ class CacheManager internal constructor(
         }
     }
 
-    fun invalidateUrl(requestUrl: String): Boolean {
-        return File(requestUrl.toAbsolutePath(absolutePath)).run {
-            if (exists()) {
-                delete()
-            } else {
-                false
-            }
-        }
-    }
-
-    fun invalidatePath(filePath: String): Boolean {
-        return File(filePath).run {
-            if (exists()) {
-                delete()
-            } else {
-                false
-            }
-        }
-    }
-
     internal fun close() {
         requestsQueue.cancelAll { true }
         requestsQueue.stop()
@@ -128,7 +108,7 @@ private val cachePrefixRegex = Regex("^((#W\\d+)|(#H\\d+)|(#S\\d+))*")
 
 private class ImageCache(private val absolutePath: String): ImageLoader.ImageCache {
     override fun getBitmap(url: String): Bitmap? {
-        val filePath = url.toAbsolutePath(absolutePath)
+        val filePath = url.toAbsolutePath()
         return if (File(filePath).exists()) {
             BitmapFactory.decodeFile(filePath)
         } else {
@@ -137,20 +117,20 @@ private class ImageCache(private val absolutePath: String): ImageLoader.ImageCac
     }
 
     override fun putBitmap(url: String, bitmap: Bitmap) {
-        val os = createFile(url.toAbsolutePath(absolutePath)).outputStream()
+        val os = createFile(url.toAbsolutePath()).outputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
         os.close()
     }
-}
 
-private fun String.toAbsolutePath(absolutePath: String): String {
-    val prefix = cachePrefixRegex.find(this)?.groupValues?.get(0) ?: ""
-    val filePath = URL(
-            this.replaceFirst(cachePrefixRegex, "")
-    ).toImageCacheFilePath(
-            absolutePath
-    )
-    val file = File(filePath)
-    return file.parent.plus("/").plus("$prefix/${file.name}")
+    private fun String.toAbsolutePath(): String {
+        val prefix = cachePrefixRegex.find(this)?.groupValues?.get(0) ?: ""
+        val filePath = URL(
+                this.replaceFirst(cachePrefixRegex, "")
+        ).toImageCacheFilePath(
+                absolutePath
+        )
+        val file = File(filePath)
+        return file.parent.plus("/").plus("$prefix/${file.name}")
+    }
 }
 
