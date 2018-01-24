@@ -139,7 +139,7 @@ class SimpleRequest(
                 realParams.iterator().forEach {
                     val value = it.second
                     when (value) {
-                        is Array<*> -> value.forEachIndexed {
+                        is Iterable<*> -> value.forEachIndexed {
                             i, current ->
                             result["${it.first}[$i]"]=current!!
                         }
