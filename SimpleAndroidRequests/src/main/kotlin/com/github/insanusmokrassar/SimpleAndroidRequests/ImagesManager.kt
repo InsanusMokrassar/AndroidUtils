@@ -67,11 +67,8 @@ class CacheManager internal constructor(
         absolutePath: String = context.getCacheDirectoryPath()
 ) {
     private val requestsQueue: RequestQueue = Volley.newRequestQueue(context)
-    private val loader: ImageLoader
-
-    init {
-        loader = ImageLoader(requestsQueue, ImageCache(absolutePath))
-    }
+    private val cache = ImageCache(absolutePath)
+    private val loader = ImageLoader(requestsQueue, cache)
 
     fun loadImage(requestUrl: String,
                   targetView: ImageView,
@@ -98,6 +95,10 @@ class CacheManager internal constructor(
         }
     }
 
+    fun invalidateUrl(requestUrl: String) {
+        cache.forceList.add(requestUrl)
+    }
+
     internal fun close() {
         requestsQueue.cancelAll { true }
         requestsQueue.stop()
@@ -107,9 +108,13 @@ class CacheManager internal constructor(
 private val cachePrefixRegex = Regex("^((#W\\d+)|(#H\\d+)|(#S\\d+))*")
 
 private class ImageCache(private val absolutePath: String): ImageLoader.ImageCache {
+    var forceList: MutableList<String> = ArrayList()
+
     override fun getBitmap(url: String): Bitmap? {
         val filePath = url.toAbsolutePath()
-        return if (File(filePath).exists()) {
+        return if (File(filePath).exists() &&
+                !forceList.contains(url.replaceFirst(cachePrefixRegex, ""))
+        ) {
             BitmapFactory.decodeFile(filePath)
         } else {
             null
