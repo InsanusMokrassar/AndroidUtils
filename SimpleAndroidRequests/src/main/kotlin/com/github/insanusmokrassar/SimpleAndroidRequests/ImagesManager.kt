@@ -8,12 +8,15 @@ import android.widget.ImageView
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
-import com.github.insanusmokrassar.CommonAndroidUtils.back.extensions.getCacheDirectoryPath
 import java.io.File
 import java.io.IOException
 import java.net.URL
 
 private val managers = HashMap<String, CacheManager>()
+
+private fun Context.getCacheDirectoryPath(): String {
+    return (externalCacheDir ?: cacheDir).absolutePath
+}
 
 fun Context.imagesManager(): CacheManager {
     val path = getCacheDirectoryPath()

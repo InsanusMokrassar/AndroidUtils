@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.SimpleAndroidORM.SimpleORM.ContentProvider
+package com.github.insanusmokrassar.SimpleAndroidORM.ContentProvider
 
 import android.content.ContentValues
 import android.content.Context

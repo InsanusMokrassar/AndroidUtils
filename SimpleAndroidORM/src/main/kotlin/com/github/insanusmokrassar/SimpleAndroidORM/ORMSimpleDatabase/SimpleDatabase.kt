@@ -1,15 +1,10 @@
-package com.github.insanusmokrassar.SimpleAndroidORM.SimpleORM.ORMSimpleDatabase
+package com.github.insanusmokrassar.SimpleAndroidORM.ORMSimpleDatabase
 
 import android.content.Context
 import android.util.Log
-import com.github.insanusmokrassar.SimpleAndroidORM.SimpleORM.ContentProvider.CommonSQLiteContentObserver
-import com.github.insanusmokrassar.CommonAndroidUtils.R
-import com.github.insanusmokrassar.SimpleAndroidORM.SimpleORM.ContentProvider.providerUri
-import com.github.insanusmokrassar.SimpleAndroidORM.extractAll
-import com.github.insanusmokrassar.SimpleAndroidORM.getPrimaryFields
-import com.github.insanusmokrassar.SimpleAndroidORM.getPrimaryFieldsSearchQuery
-import com.github.insanusmokrassar.SimpleAndroidORM.toContentValues
-import com.github.insanusmokrassar.CommonAndroidUtils.common.extensions.TAG
+import com.github.insanusmokrassar.SimpleAndroidORM.*
+import com.github.insanusmokrassar.SimpleAndroidORM.ContentProvider.CommonSQLiteContentObserver
+import com.github.insanusmokrassar.SimpleAndroidORM.ContentProvider.providerUri
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.lang.ref.WeakReference
@@ -41,7 +36,7 @@ open class SimpleDatabase<M: Any> (
 
     init {
         observable.subscribe {
-            Log.i(TAG(), "Changed: $it")
+            Log.d(this::class.java.simpleName, "Changed: $it")
         }
     }
 

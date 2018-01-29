@@ -39,10 +39,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    // Front
-    implementation "com.android.support:appcompat-v7:$build_tools_version"
-    implementation "com.android.support:design:$build_tools_version"
-
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -54,7 +50,6 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     })
     implementation "com.github.insanusmokrassar:IObjectK:$iobject_version"
-    implementation 'com.github.insanusmokrassar:CommonAndroidUtils:0.1'
 
     // Common. Trusted.
     implementation 'com.mcxiaoke.volley:library:1.0.19'

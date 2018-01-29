@@ -11,8 +11,6 @@ import com.github.insanusmokrassar.IObjectK.extensions.asMap
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
 import com.github.insanusmokrassar.IObjectKRealisations.toStringMap
-import com.github.insanusmokrassar.CommonAndroidUtils.common.extensions.TAG
-import com.github.insanusmokrassar.IObjectK.extensions.asMutableMap
 import com.github.insanusmokrassar.IObjectK.extensions.iterator
 
 private val cache = HashMap<String, RequestsHelper>()
@@ -44,7 +42,7 @@ class RequestsHelper internal constructor (c: Context) {
                     readyToSend = false
                 }
             } catch (e: Exception) {
-                Log.w(TAG(), "REQUESTS SYNCHRONISATION WAS STOPPED", e)
+                Log.w(this::class.java.simpleName, "REQUESTS SYNCHRONISATION WAS STOPPED", e)
             }
         })
     })

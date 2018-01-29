@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.SimpleAndroidORM.SimpleORM.ORMSimpleDatabase
+package com.github.insanusmokrassar.SimpleAndroidORM.ORMSimpleDatabase
 
 import android.content.Context
 import android.util.Log

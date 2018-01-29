@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.SimpleAndroidORM.SimpleORM.ContentProvider
+package com.github.insanusmokrassar.SimpleAndroidORM.ContentProvider
 
 import android.content.ContentProvider
 import android.content.ContentResolver
@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.CancellationSignal
 import android.support.annotation.RequiresApi
 import android.util.Log
-import com.github.insanusmokrassar.CommonAndroidUtils.common.extensions.TAG
 import kotlin.reflect.KClass
 
 fun Uri.center(): String = authority
@@ -54,7 +53,7 @@ class CommonSQLiteContentProvider : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
-        Log.i(TAG(), "Created")
+        Log.i(this::class.java.simpleName, "Created")
         return true
     }
 
