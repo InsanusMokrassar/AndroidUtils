@@ -12,6 +12,7 @@ import com.github.insanusmokrassar.IObjectK.interfaces.IObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
 import com.github.insanusmokrassar.IObjectKRealisations.toStringMap
 import com.github.insanusmokrassar.IObjectK.extensions.iterator
+import com.github.insanusmokrassar.IObjectK.interfaces.IInputObject
 
 private val cache = HashMap<String, RequestsHelper>()
 
@@ -65,7 +66,7 @@ class RequestsHelper internal constructor (c: Context) {
             method: Int,
             successResponse: (String) -> Unit,
             errorListener: Response.ErrorListener,
-            paramsBuilder: () -> IObject<Any> = { SimpleIObject() },
+            paramsBuilder: () -> IInputObject<String, Any> = { SimpleIObject() },
             priority: Request.Priority = Request.Priority.NORMAL
     ) {
         Log.i("Requests bus", "Try to add request for: $url")
@@ -110,7 +111,7 @@ class SimpleRequest(
         method: Int,
         successResponse: (String) -> Unit,
         errorListener: Response.ErrorListener,
-        private val paramsBuilder: () -> IObject<Any> = { SimpleIObject() },
+        private val paramsBuilder: () -> IInputObject<String, Any> = { SimpleIObject() },
         private val priority: Request.Priority = Request.Priority.NORMAL
 ): StringRequest(
         method,
@@ -121,10 +122,10 @@ class SimpleRequest(
         },
         errorListener
 ) {
-    private val realParams: IObject<Any>
+    private val realParams: IInputObject<String, Any>
         get() {
-            val params = paramsBuilder()
-            super.getParams()?.let {
+            val params = SimpleIObject(paramsBuilder().asMap())
+            super.getParams() ?.let {
                 params.putAll(it)
             }
             return params
@@ -146,7 +147,7 @@ class SimpleRequest(
                 }
                 result
             } else {
-                realParams
+                SimpleIObject(realParams.asMap())
             }
         }
 
