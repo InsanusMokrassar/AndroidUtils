@@ -4,10 +4,10 @@ import android.net.Uri
 import java.net.URI
 
 fun URI.toAndroidUri(): Uri {
-    return Uri.Builder().scheme(getScheme())
-            .encodedAuthority(getRawAuthority())
-            .encodedPath(getRawPath())
-            .query(getRawQuery())
-            .fragment(getRawFragment())
+    return Uri.Builder().scheme(scheme)
+            .encodedAuthority(rawAuthority)
+            .encodedPath(rawPath)
+            .query(rawQuery)
+            .fragment(rawFragment)
             .build()
 }

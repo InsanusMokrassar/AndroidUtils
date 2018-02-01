@@ -73,10 +73,13 @@ class CacheManager internal constructor(
     private val cache = ImageCache(absolutePath)
     private val loader = ImageLoader(requestsQueue, cache)
 
+    var defaultImageRes: Int = R.drawable.ic_default_image
+    var brokenImageRes: Int = R.drawable.ic_broken_image
+
     fun loadImage(requestUrl: String,
                   targetView: ImageView,
-                  defaultResource: Int = R.drawable.ic_default_image,
-                  errorResource: Int = R.drawable.ic_broken_image,
+                  defaultResource: Int = defaultImageRes,
+                  errorResource: Int = brokenImageRes,
                   maxWidth: Int? = null,
                   maxHeight: Int? = null,
                   scaleType: ImageView.ScaleType? = ImageView.ScaleType.CENTER_INSIDE
