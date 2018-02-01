@@ -8,7 +8,7 @@ data class AppInfo(
         val packageInfo: PackageInfo,
         val name: String,
         val packageName: String = packageInfo.packageName,
-        val version: String = packageInfo.versionName,
+        val version: String? = packageInfo.versionName,
         val icon: Drawable
 ) {
     constructor(
