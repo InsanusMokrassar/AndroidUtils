@@ -7,6 +7,7 @@ import io.reactivex.subjects.PublishSubject
 import java.util.*
 
 typealias LeftItemsCallback = (Int) -> Unit
+typealias LeftItemsFilter = (Int) -> Boolean
 typealias LeftItemsSubscription = Observable<Int>
 
 private val weakLeftItemsMap = WeakHashMap<RecyclerView, LeftItemsSubscription>()
@@ -18,10 +19,20 @@ fun RecyclerView.subscribeItemsLeft(
     if (leftPagesCount < 0) {
         throw IllegalArgumentException("leftPagesCount must be positive")
     }
+    subscribeItemsLeft(
+            callback,
+            {
+                it <= leftPagesCount
+            }
+    )
+}
+
+fun RecyclerView.subscribeItemsLeft(
+        callback: LeftItemsCallback,
+        filter: LeftItemsFilter
+) {
     weakLeftItemsMap[this] ?.let {
-        it.filter {
-            it <= leftPagesCount
-        }.subscribe(callback)
+        it.filter(filter).subscribe(callback)
     } ?:let {
         weakLeftItemsMap[this] = PublishSubject.create<Int>().also {
             subject ->
@@ -37,7 +48,7 @@ fun RecyclerView.subscribeItemsLeft(
                 )
             }
         }
-        subscribeItemsLeft(callback, leftPagesCount)
+        subscribeItemsLeft(callback, filter)
     }
 }
 
