@@ -23,7 +23,20 @@ fun RecyclerView.subscribeItemsLeft(
             it <= leftPagesCount
         }.subscribe(callback)
     } ?:let {
-        weakLeftItemsMap[this] = PublishSubject.create()
+        weakLeftItemsMap[this] = PublishSubject.create<Int>().also {
+            subject ->
+            val layoutManager = layoutManager
+            when (layoutManager) {
+                is LinearLayoutManager -> addOnScrollListener(
+                        LinearLayoutManagerLeftItemsListener(
+                                layoutManager,
+                                {
+                                    subject.onNext(it)
+                                }
+                        )
+                )
+            }
+        }
         subscribeItemsLeft(callback, leftPagesCount)
     }
 }
