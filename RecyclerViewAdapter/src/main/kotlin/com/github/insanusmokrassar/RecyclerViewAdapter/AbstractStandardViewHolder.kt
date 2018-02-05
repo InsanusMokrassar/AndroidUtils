@@ -1,10 +1,9 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.RecyclerView
+package com.github.insanusmokrassar.RecyclerViewAdapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-@Deprecated("Class was replaced into other module", ReplaceWith("Dependency 'com.github.insanusmokrassar:RecyclerViewAdaper'"))
 abstract class AbstractStandardViewHolder<T>(
         inflater: LayoutInflater,
         container: ViewGroup?,

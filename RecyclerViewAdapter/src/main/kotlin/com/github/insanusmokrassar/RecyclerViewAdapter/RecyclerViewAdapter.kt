@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.RecyclerView
+package com.github.insanusmokrassar.RecyclerViewAdapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
-@Deprecated("Class was replaced into other module", ReplaceWith("Dependency 'com.github.insanusmokrassar:RecyclerViewAdaper'"))
 class RecyclerViewAdapter<T>(
         private val viewHolderFactory: (
                 parent: ViewGroup,
