@@ -1,0 +1,64 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.github.insanusmokrassar'
+version = 1
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion build_tools_version
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode version
+        versionName "${version/10}"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    // Front
+    implementation "com.android.support:appcompat-v7:$build_tools_version"
+    implementation "com.android.support:design:$build_tools_version"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+
+    // Github. Trusted.
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            group project.group
+            artifactId project.name
+            version "${project.version/10}"
+        }
+    }
+}
