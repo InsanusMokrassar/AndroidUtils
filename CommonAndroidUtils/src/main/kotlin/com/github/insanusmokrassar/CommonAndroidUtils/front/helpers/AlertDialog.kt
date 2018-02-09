@@ -11,8 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.github.insanusmokrassar.CommonAndroidUtils.R
-import com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.RecyclerView.AbstractViewHolder
-import com.github.insanusmokrassar.CommonAndroidUtils.front.utils.adapters.RecyclerView.RecyclerViewAdapter
 
 fun Context.createSimpleTextDialog(
         title: String,
@@ -43,14 +41,9 @@ fun Context.createSimpleTextDialog(
     }
 }
 
-fun <T> Context.createRecyclerViewDialog(
-        data: List<T>,
+fun Context.createRecyclerViewDialog(
         titleRes: Int,
-        viewHolderFactory: (
-                parent: ViewGroup,
-                viewType: Int,
-                adapter: RecyclerViewAdapter<T>
-        ) -> AbstractViewHolder<T>,
+        adapterFactory: () -> RecyclerView.Adapter<*>,
         layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this),
         show: Boolean = true
 ): AlertDialog {
@@ -68,8 +61,7 @@ fun <T> Context.createRecyclerViewDialog(
     )
     recyclerView.layoutManager = layoutManager
     recyclerView.layoutParams = lp
-    val adapter = RecyclerViewAdapter(viewHolderFactory, data)
-    recyclerView.adapter = adapter
+    recyclerView.adapter = adapterFactory()
 
     val builder = AlertDialog.Builder(this)
 
