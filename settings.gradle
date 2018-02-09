@@ -1,1 +1,1 @@
-include ':CommonAndroidUtils', ':SimpleAndroidORM', ':SimpleAndroidRequests', ':SimpleAndroidAppsHelper', ':RecyclerViewItemsLeft', ':RecyclerViewAdapter'
+include ':CommonAndroidUtils', ':SimpleAndroidORM', ':SimpleAndroidRequests', ':SimpleAndroidAppsHelper', ':RecyclerViewItemsLeft', ':RecyclerViewAdapter', ':SimpleAndroidViewsManagers'

@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.front.utils.EditTextManager
+package com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -6,7 +6,6 @@ import android.widget.EditText
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
-@Deprecated("This class deprecated", ReplaceWith("Similar class in SimpleAndroidViewsManagers library"))
 open class EditTextManager<T>(
         val view: EditText,
         private val validChecker: (T, EditTextManager<T>) -> Boolean = {
@@ -15,7 +14,7 @@ open class EditTextManager<T>(
         },
         private val textTransformationSet: (T, EditTextManager<T>) -> String,
         private val textTransformationGet: (String, EditTextManager<T>) -> T,
-        private val textChangedValidator: ((String) -> Boolean)? = null
+        textChangedValidator: ((String) -> Boolean)? = null
 ) {
     var text: T?
         get() = textTransformationGet(
@@ -67,7 +66,6 @@ open class EditTextManager<T>(
     }
 }
 
-@Deprecated("This class deprecated", ReplaceWith("Similar class in SimpleAndroidViewsManagers library"))
 private class StandardEditTextManagerWatcher(
         private val validator: (String) -> Boolean
 ): TextWatcher {

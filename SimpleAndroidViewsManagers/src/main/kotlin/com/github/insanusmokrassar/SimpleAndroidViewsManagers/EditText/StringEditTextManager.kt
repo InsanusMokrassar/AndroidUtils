@@ -1,8 +1,8 @@
-package com.github.insanusmokrassar.CommonAndroidUtils.front.utils.EditTextManager
+package com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText
 
 import android.widget.EditText
+import com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText.EditTextManager
 
-@Deprecated("This class deprecated", ReplaceWith("Similar class in SimpleAndroidViewsManagers library"))
 open class StringEditTextManager(
         view: EditText,
         validChecker: (String, EditTextManager<String>) -> Boolean = { _, _ -> true },
