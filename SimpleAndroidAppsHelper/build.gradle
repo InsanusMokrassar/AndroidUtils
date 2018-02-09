@@ -1,18 +1,17 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.novoda.bintray-release'
 
-group = 'com.github.insanusmokrassar'
 version = 1
+ext.version_name = "${version/10}"
 
 android {
     compileSdkVersion 27
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-
+        versionCode version
+        versionName version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,6 +24,9 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+    }
+    lintOptions {
+        disable 'InvalidPackage'
     }
 }
 
@@ -39,12 +41,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            group project.group
-            artifactId project.name
-            version "${project.version/10}"
-        }
-    }
+publish {
+    repoName = publish_repo_name
+    groupId = publish_group
+    artifactId = project.name
+    publishVersion = version_name
 }
