@@ -1,0 +1,3 @@
+# CommonAndroidUtils
+
+This module was created as part of AndroidUtils support library which contains common usefull features. For example, here you can find [TAG](src/main/kotlin/com/github/insanusmokrassar/CommonAndroidUtils/common/extensions/Any.kt#3) extension for any object. It will be usefull in cases when you need to log something, but creating new variable for tag anytime when you need log something in new class/object (which will contains something as `this::class.simpleName`) can be replaced by simple `TAG()`.
