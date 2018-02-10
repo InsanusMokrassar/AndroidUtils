@@ -3,9 +3,7 @@ package com.github.insanusmokrassar.CommonAndroidUtils.back.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
-import com.github.insanusmokrassar.IObjectK.realisations.ConcurrentSimpleCommonIObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
-import com.github.insanusmokrassar.IObjectK.realisations.StandardIInputObjectIterator
 import java.io.Serializable
 
 private val cache = HashMap<String, MutableMap<String, KeyValueStore>>()
