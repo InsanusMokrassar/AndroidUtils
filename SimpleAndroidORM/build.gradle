@@ -4,6 +4,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.insanusmokrassar'
 version = 1
+ext.version_name = "${version / 10}"
 
 android {
     compileSdkVersion 27
@@ -64,7 +65,7 @@ install {
         pom.project {
             group project.group
             artifactId project.name
-            version "${project.version/10}"
+            version version_name
         }
     }
 }
