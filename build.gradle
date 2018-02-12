@@ -6,9 +6,6 @@ buildscript {
     ext.iobject_version = '1.9'
     ext.iobject_realisations_version = '1.9.1'
 
-    ext.publish_repo_name = 'StandardRepository'
-    ext.publish_group = 'com.github.insanusmokrassar'
-
     repositories {
         jcenter()
         mavenLocal()
@@ -18,7 +15,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.novoda:bintray-release:0.8.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -31,10 +28,6 @@ allprojects {
         mavenLocal()
         mavenCentral()
         google()
-    }
-
-    tasks.withType(Javadoc).all {
-        enabled = false
     }
 }
 

@@ -1,9 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
 
+group = 'com.github.insanusmokrassar'
 version = 1
-ext.version_name = "${version/10}"
 
 android {
     compileSdkVersion 27
@@ -24,9 +24,6 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-    }
-    lintOptions {
-        disable 'InvalidPackage'
     }
 }
 
@@ -58,13 +55,16 @@ dependencies {
     implementation "com.github.insanusmokrassar:IObjectK:$iobject_version"
 
     // RX
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
 }
 
-publish {
-    repoName = publish_repo_name
-    groupId = publish_group
-    artifactId = project.name
-    publishVersion = version_name
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            group project.group
+            artifactId project.name
+            version "${project.version/10}"
+        }
+    }
 }
