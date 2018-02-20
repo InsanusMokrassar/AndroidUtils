@@ -8,7 +8,8 @@ open class StringEditTextManager(
         validChecker: (String, EditTextManager<String>) -> Boolean = { _, _ -> true },
         textTransformationSet: (String, EditTextManager<String>) -> String = { it, _ -> it },
         textTransformationGet: (String, EditTextManager<String>) -> String = { it, _ -> it },
+        onTextInvalidCallback: (String, EditTextManager<String>) -> Unit = { _, _ -> },
         textChangedValidator: ((String) -> Boolean)? = null
 ) : EditTextManager<String>(
-        view, validChecker, textTransformationSet, textTransformationGet, textChangedValidator
+        view, validChecker, textTransformationSet, textTransformationGet, onTextInvalidCallback, textChangedValidator
 )

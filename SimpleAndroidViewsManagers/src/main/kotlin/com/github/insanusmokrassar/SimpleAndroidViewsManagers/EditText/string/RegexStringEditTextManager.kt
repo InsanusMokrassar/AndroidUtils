@@ -8,6 +8,7 @@ open class RegexStringEditTextManager(
         validationRegex: Regex = Regex("^.*$"),
         textTransformationSet: (String, EditTextManager<String>) -> String = { it, _ -> it },
         textTransformationGet: (String, EditTextManager<String>) -> String = { it, _ -> it },
+        onTextInvalidCallback: (String, EditTextManager<String>) -> Unit = { _, _ -> },
         onTextChangedValidationRegex: Regex? = null
 ) : StringEditTextManager(
         view,
@@ -17,6 +18,7 @@ open class RegexStringEditTextManager(
         },
         textTransformationSet,
         textTransformationGet,
+        onTextInvalidCallback,
         onTextChangedValidationRegex ?.let {
             {
                 s: String ->

@@ -14,39 +14,49 @@ open class EditTextManager<T>(
         },
         private val textTransformationSet: (T, EditTextManager<T>) -> String,
         private val textTransformationGet: (String, EditTextManager<T>) -> T,
+        private val onTextInvalidCallback: (String, EditTextManager<T>) -> Unit,
         textChangedValidator: ((String) -> Boolean)? = null
 ) {
+    var text: String
+        get() = view.text.toString()
+        set(value) {
+            view.text.clear()
+            view.text.insert(0, value)
+        }
+
     var data: T?
         get() = textTransformationGet(
-                view.text.toString(),
+                text,
                 this
         )
         set(value) {
             value ?.let {
                 launch (UI) {
-                    val text = textTransformationSet(it, this@EditTextManager)
-                    view.text.apply {
-                        clear()
-                        insert(0, text)
-                    }
+                    text = textTransformationSet(it, this@EditTextManager)
                 }
             } ?:let {
                 launch (UI) {
-                    view.text.clear()
+                    text = ""
                 }
             }
         }
 
-    val isCorrect: Boolean
+    private val isCorrect: Boolean
         get() = data ?.let {
-            validChecker(it, this)
+            validChecker(it, this).apply {
+                if (!this) {
+                    onTextInvalidCallback(text, this@EditTextManager)
+                }
+            }
         } ?: false
+
     val correctOrNull: T?
         get() = if (isCorrect) {
             data
         } else {
             null
         }
+
     var error: String?
         get() = view.error.toString()
         set(value) {
