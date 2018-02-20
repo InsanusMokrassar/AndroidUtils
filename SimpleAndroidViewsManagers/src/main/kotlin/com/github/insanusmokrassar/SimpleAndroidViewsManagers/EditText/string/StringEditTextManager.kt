@@ -1,4 +1,4 @@
-package com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText
+package com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText.string
 
 import android.widget.EditText
 import com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText.EditTextManager
@@ -8,7 +8,7 @@ open class StringEditTextManager(
         validChecker: (String, EditTextManager<String>) -> Boolean = { _, _ -> true },
         textTransformationSet: (String, EditTextManager<String>) -> String = { it, _ -> it },
         textTransformationGet: (String, EditTextManager<String>) -> String = { it, _ -> it },
-        editTextValidator: (String) -> Boolean = { true }
+        onTextChangedValidation: Boolean = false
 ) : EditTextManager<String>(
-        view, validChecker, textTransformationSet, textTransformationGet, editTextValidator
+        view, validChecker, textTransformationSet, textTransformationGet, onTextChangedValidation
 )

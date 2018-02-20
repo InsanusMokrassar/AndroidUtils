@@ -14,9 +14,9 @@ open class EditTextManager<T>(
         },
         private val textTransformationSet: (T, EditTextManager<T>) -> String,
         private val textTransformationGet: (String, EditTextManager<T>) -> T,
-        textChangedValidator: ((String) -> Boolean)? = null
+        onTextChangedValidation: Boolean = false
 ) {
-    var text: T?
+    var data: T?
         get() = textTransformationGet(
                 view.text.toString(),
                 this
@@ -38,12 +38,12 @@ open class EditTextManager<T>(
         }
 
     val isCorrect: Boolean
-        get() = text ?.let {
+        get() = data ?.let {
             validChecker(it, this)
         } ?: false
     val correctOrNull: T?
         get() = if (isCorrect) {
-            text
+            data
         } else {
             null
         }
@@ -56,11 +56,19 @@ open class EditTextManager<T>(
         }
 
     init {
-        textChangedValidator ?. let {
+        if (onTextChangedValidation) {
             view.addTextChangedListener(
-                StandardEditTextManagerWatcher(
-                        it
-                )
+                    StandardEditTextManagerWatcher(
+                            {
+                                validChecker(
+                                        textTransformationGet(
+                                                it,
+                                                this
+                                        ),
+                                        this
+                                )
+                            }
+                    )
             )
         }
     }

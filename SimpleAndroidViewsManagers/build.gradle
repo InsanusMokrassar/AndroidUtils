@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.insanusmokrassar'
-version = 1
+version = 2
 ext.version_name = "${version / 10}"
 
 android {
