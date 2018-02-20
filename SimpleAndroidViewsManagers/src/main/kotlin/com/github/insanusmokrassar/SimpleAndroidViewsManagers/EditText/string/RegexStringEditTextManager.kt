@@ -8,7 +8,7 @@ open class RegexStringEditTextManager(
         validationRegex: Regex = Regex("^.*$"),
         textTransformationSet: (String, EditTextManager<String>) -> String = { it, _ -> it },
         textTransformationGet: (String, EditTextManager<String>) -> String = { it, _ -> it },
-        onTextChangedValidation: Boolean = true
+        onTextChangedValidationRegex: Regex? = null
 ) : StringEditTextManager(
         view,
         {
@@ -17,5 +17,10 @@ open class RegexStringEditTextManager(
         },
         textTransformationSet,
         textTransformationGet,
-        onTextChangedValidation
+        onTextChangedValidationRegex ?.let {
+            {
+                s: String ->
+                it.matches(s)
+            }
+        }
 )
