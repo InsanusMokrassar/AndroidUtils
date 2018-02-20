@@ -3,7 +3,7 @@ package com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText.string
 import android.widget.EditText
 import com.github.insanusmokrassar.SimpleAndroidViewsManagers.EditText.EditTextManager
 
-class RegexStringEditTextManager(
+open class RegexStringEditTextManager(
         view: EditText,
         validationRegex: Regex = Regex("^.*$"),
         textTransformationSet: (String, EditTextManager<String>) -> String = { it, _ -> it },
