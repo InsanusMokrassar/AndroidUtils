@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.RetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.github.insanusmokrassar.IObjectK.extensions.asMap
@@ -27,6 +28,12 @@ fun Application.getRequestsHelper(): RequestsHelper {
 }
 
 class RequestsHelper internal constructor (c: Context) {
+    var defaultRetryPolicy: RetryPolicy? = null
+        set(value) {
+            Log.d(this::class.java.simpleName, "Default retry policy was changed for: $this; value: $value")
+            field = value
+        }
+
     private val executeQueue = Volley.newRequestQueue(c)
     private var readyToSend = true
     private val requestsQueue = ArrayList<Request<*>>()
@@ -67,7 +74,8 @@ class RequestsHelper internal constructor (c: Context) {
             successResponse: (String) -> Unit,
             errorListener: Response.ErrorListener,
             paramsBuilder: () -> IInputObject<String, Any> = { SimpleIObject() },
-            priority: Request.Priority = Request.Priority.NORMAL
+            priority: Request.Priority = Request.Priority.NORMAL,
+            retryPolicy: RetryPolicy? = defaultRetryPolicy
     ) {
         Log.i("Requests bus", "Try to add request for: $url")
         val request = SimpleRequest(
@@ -78,6 +86,9 @@ class RequestsHelper internal constructor (c: Context) {
                 paramsBuilder,
                 priority
         )
+        retryPolicy ?.let {
+            request.retryPolicy = it
+        }
         execute(request)
     }
 
