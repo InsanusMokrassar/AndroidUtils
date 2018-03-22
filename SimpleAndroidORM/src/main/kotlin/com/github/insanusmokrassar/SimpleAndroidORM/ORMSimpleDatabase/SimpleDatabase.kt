@@ -16,7 +16,7 @@ open class SimpleDatabase<M: Any> (
         context: Context,
         databaseName: String,
         version: Int,
-        private val defaultOrderBy: String? = null
+        private val defaultOrderBy: String? = modelClass.orderBy()
 ) {
     protected val contextReference = WeakReference(context)
     protected val providerUri =

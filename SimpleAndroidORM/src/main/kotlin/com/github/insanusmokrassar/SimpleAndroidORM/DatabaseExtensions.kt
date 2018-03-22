@@ -191,3 +191,20 @@ fun <M : Any> SQLiteDatabase.createTableIfNotExist(modelClass: KClass<M>) {
         throw IllegalArgumentException("Can't create table ${modelClass.tableName()}", e)
     }
 }
+
+fun KClass<*>.orderBy(): String? {
+    getOrdersBy().run {
+        return if (isEmpty()) {
+            null
+        } else {
+            val builder = StringBuilder()
+            joinToString(", ") {
+                builder.append("${it.name} ${
+                    (it.annotations.first {
+                        it.annotationClass == OrderBy::class
+                    } as OrderBy).order
+                }")
+            }
+        }
+    }
+}

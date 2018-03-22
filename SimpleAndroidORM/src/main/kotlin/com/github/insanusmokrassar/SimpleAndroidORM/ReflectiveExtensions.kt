@@ -14,6 +14,11 @@ annotation class PrimaryKey
 @MustBeDocumented
 annotation class Autoincrement
 
+const val descOrder = "DESC"
+@Target(AnnotationTarget.PROPERTY)
+@MustBeDocumented
+annotation class OrderBy(val order: String = "ASC")
+
 /**
  * List of classes which can be primitive
  */
@@ -51,25 +56,38 @@ fun KCallable<*>.isReturnNative() : Boolean =
         nativeTypes.contains(this.returnClass())
 
 /**
- * @return true если объект помечен аннотацией [PrimaryKey].
+ * @return true если объект помечен аннотацией
  */
-fun KProperty<*>.isPrimaryField() : Boolean =
-        this.annotations.firstOrNull { it.annotationClass == PrimaryKey::class } != null
-
-/**
- * @return true если объект помечен аннотацией [Autoincrement].
- */
-fun KProperty<*>.isAutoincrement() : Boolean {
+fun KProperty<*>.isAnnotated(annotationClass: KClass<*>) : Boolean {
     this.annotations.forEach {
-        if (it.annotationClass == Autoincrement::class) {
-            return@isAutoincrement true
+        if (it.annotationClass == annotationClass) {
+            return true
         }
     }
     return false
 }
 
 /**
+ * @return true если объект помечен аннотацией [PrimaryKey].
+ */
+fun KProperty<*>.isPrimaryField() : Boolean = isAnnotated(PrimaryKey::class)
+
+/**
+ * @return true если объект помеченc аннотацией [Autoincrement].
+ */
+fun KProperty<*>.isAutoincrement() : Boolean = isAnnotated(Autoincrement::class)
+
+/**
  * @return Список полей класса.
  */
 fun KClass<*>.getVariables() : List<KProperty<*>> =
         this.memberProperties.toList()
+
+/**
+ * @return Список полей класса, участвующих в построении порядка вывода данных
+ */
+fun KClass<*>.getOrdersBy(): List<KProperty<*>> {
+    return getVariables().filter {
+        it.isAnnotated(OrderBy::class)
+    }
+}
