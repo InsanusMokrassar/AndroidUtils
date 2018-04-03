@@ -8,9 +8,9 @@ private val helpers = WeakHashMap<Context, AppsHelper>()
 
 fun Context.appsHelper(): AppsHelper {
     synchronized(helpers, {
-        helpers[this]?.let { return it }
-        helpers[this] = AppsHelper(this)
-        return helpers[this]!!
+        return helpers[this] ?: AppsHelper(this).also {
+            helpers[this] = it
+        }
     })
 }
 

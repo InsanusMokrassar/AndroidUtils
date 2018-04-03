@@ -5,18 +5,23 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 
 data class AppInfo(
-        val packageInfo: PackageInfo,
-        val name: String,
-        val packageName: String = packageInfo.packageName,
-        val version: String? = packageInfo.versionName,
-        val icon: Drawable
+        private val packageInfo: PackageInfo,
+        private val packagesManager: PackageManager
 ) {
-    constructor(
-            packageInfo: PackageInfo,
-            packagesManager: PackageManager
-    ) : this(
-            packageInfo,
-            packageInfo.applicationInfo.loadLabel(packagesManager).toString(),
-            icon = packageInfo.applicationInfo.loadIcon(packagesManager)
-    )
+
+    private var cachedIcon: Drawable? = null
+    private var cachedName: String? = null
+
+    val packageName: String = packageInfo.packageName
+    val version: String? = packageInfo.versionName
+
+    val name: String
+        get() = cachedName ?: packageInfo.applicationInfo.loadLabel(packagesManager).toString().also {
+            cachedName = it
+        }
+
+    val icon: Drawable
+        get() = cachedIcon ?: packageInfo.applicationInfo.loadIcon(packagesManager).also {
+            cachedIcon = it
+        }
 }
