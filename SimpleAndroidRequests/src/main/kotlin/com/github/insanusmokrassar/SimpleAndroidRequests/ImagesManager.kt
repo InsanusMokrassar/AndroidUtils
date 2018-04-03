@@ -11,6 +11,7 @@ import com.android.volley.toolbox.Volley
 import java.io.File
 import java.io.IOException
 import java.net.URL
+import java.util.*
 
 private val managers = HashMap<String, CacheManager>()
 
@@ -115,22 +116,25 @@ private val cachePrefixRegex = Regex("^(#W\\d*)?(#H\\d*)?(#S\\d*)?")
 
 private class ImageCache(private val absolutePath: String): ImageLoader.ImageCache {
     var forceList: MutableList<String> = ArrayList()
+    private val inMemoryCache = WeakHashMap<String, Bitmap>()
 
     override fun getBitmap(url: String): Bitmap? {
         val filePath = url.toAbsolutePath()
         return if (File(filePath).exists() &&
-                !forceList.contains(url.replaceFirst(cachePrefixRegex, ""))
+                !forceList.contains(cachePrefixRegex.replaceFirst(url, ""))
         ) {
-            BitmapFactory.decodeFile(filePath)
+            inMemoryCache[filePath] ?: BitmapFactory.decodeFile(filePath).apply {
+                inMemoryCache[filePath] = this
+            }
         } else {
             null
         }
     }
 
     override fun putBitmap(url: String, bitmap: Bitmap) {
-        val os = createFile(url.toAbsolutePath()).outputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
-        os.close()
+        createFile(url.toAbsolutePath()).outputStream().use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
     }
 
     private fun String.toAbsolutePath(): String {
