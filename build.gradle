@@ -1,10 +1,10 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
-    ext.kotlin_coroutines_version = '0.19.3'
+    ext.kotlin_version = '1.2.31'
+    ext.kotlin_coroutines_version = '0.22.3'
     ext.build_tools_version = '27.0.2'
 
     ext.iobject_version = '1.9'
-    ext.iobject_realisations_version = '1.9.1'
+    ext.iobject_realisations_version = '1.9.3'
 
     repositories {
         jcenter()
@@ -13,7 +13,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
 
