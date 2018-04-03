@@ -2,55 +2,60 @@ package com.github.insanusmokrassar.CommonAndroidUtils.back.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.github.insanusmokrassar.IObjectK.exceptions.ReadException
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
-import com.github.insanusmokrassar.IObjectK.realisations.ConcurrentSimpleCommonIObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
-import com.github.insanusmokrassar.IObjectK.realisations.StandardIInputObjectIterator
 import java.io.Serializable
 
 private val cache = HashMap<String, MutableMap<String, KeyValueStore>>()
 
 fun Context.keyValueStore(
-        name: String = "default"
+        name: String = "default",
+        cacheValues: Boolean = false
 ): IObject<Any> {
     val className = this::class.java.simpleName
     return cache[className] ?. get(name) ?.let {
         it
     } ?: {
-        cache.put(
-                className,
-                mutableMapOf(
-                        Pair(
-                                name,
-                                KeyValueStore(this, name)
-                        )
+        cache[className] = mutableMapOf(
+                Pair(
+                        name,
+                        KeyValueStore(this, name, cacheValues)
                 )
         )
-        keyValueStore(name)
+        keyValueStore(name, cacheValues)
     }()
 }
 
 class KeyValueStore internal constructor (
         c: Context,
-        preferencesName: String
+        preferencesName: String,
+        useCache: Boolean = false
 ) : IObject<Any>, SharedPreferences.OnSharedPreferenceChangeListener {
     private val sharedPreferences = c.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
 
-    private val cachedData = SimpleIObject()
+    private val cachedData: IObject<Any>? = if (useCache) {
+        SimpleIObject()
+    } else {
+        null
+    }
 
     init {
-        sharedPreferences.all.forEach {
-            if (it.value != null) {
-                cachedData.put(it.key, it.value as Any)
+        cachedData ?.let {
+            sharedPreferences.all.forEach {
+                if (it.value != null) {
+                    cachedData[it.key] = it.value as Any
+                }
             }
+            sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         }
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String) {
         val value = sp.all[key]
+        cachedData ?: return
         if (value != null) {
-            cachedData.put(key, value)
+            cachedData[key] = value
         } else {
             cachedData.remove(key)
         }
@@ -65,7 +70,7 @@ class KeyValueStore internal constructor (
 
     @Synchronized
     override fun <T: Any> get(key: String): T {
-        val value = cachedData.get<Any>(key)
+        val value = cachedData ?. get(key) ?: sharedPreferences.all[key] ?: throw ReadException("$key was not found")
         return when(value) {
             !is String -> value
             else -> {
@@ -84,7 +89,7 @@ class KeyValueStore internal constructor (
 
     @Synchronized
     override fun keys(): Set<String> {
-        return cachedData.keys().toSet()
+        return cachedData ?. keys() ?. toSet() ?: sharedPreferences.all.keys
     }
 
     @Synchronized
