@@ -1,5 +1,6 @@
 package com.github.insanusmokrassar.SimpleAndroidRequests
 
+import android.util.Log
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import java.nio.charset.Charset
@@ -30,9 +31,19 @@ class DefaultErrorListener<T> (
                 error
         ).forEach {
             error ->
-            handlers[error] ?.let {
-                it(error)
-            } ?: defaultHandler(error)
+            try {
+                handlers[error]?.let {
+                    it(error)
+                }
+            } catch (e: Exception) {
+                Log.d(this::class.java.simpleName, "Can't handle error by handler: $error")
+            } ?:let {
+                try {
+                    defaultHandler(error)
+                } catch (e: Exception) {
+                    Log.d(this::class.java.simpleName, "Can't handle error by default handler: $error")
+                }
+            }
         }
     }
 }
