@@ -111,7 +111,7 @@ class CacheManager internal constructor(
     }
 }
 
-private val cachePrefixRegex = Regex("^((#W\\d+)|(#H\\d+)|(#S\\d+))*")
+private val cachePrefixRegex = Regex("^(#W\\d*)?(#H\\d*)?(#S\\d*)?")
 
 private class ImageCache(private val absolutePath: String): ImageLoader.ImageCache {
     var forceList: MutableList<String> = ArrayList()
@@ -134,7 +134,7 @@ private class ImageCache(private val absolutePath: String): ImageLoader.ImageCac
     }
 
     private fun String.toAbsolutePath(): String {
-        val prefix = cachePrefixRegex.find(this)?.groupValues?.get(0) ?: ""
+        val prefix = cachePrefixRegex.find(this) ?. groupValues ?. firstOrNull() ?: ""
         val filePath = URL(
                 this.replaceFirst(cachePrefixRegex, "")
         ).toImageCacheFilePath(
