@@ -8,6 +8,8 @@ import android.widget.ImageView
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import java.io.File
 import java.io.IOException
 import java.net.URL
@@ -74,17 +76,23 @@ class CacheManager internal constructor(
     private val cache = ImageCache(absolutePath)
     private val loader = ImageLoader(requestsQueue, cache)
 
+    var preloaderImageRes: Int = R.drawable.ic_preload_image
     var defaultImageRes: Int = R.drawable.ic_default_image
     var brokenImageRes: Int = R.drawable.ic_broken_image
 
-    fun loadImage(requestUrl: String,
-                  targetView: ImageView,
-                  defaultResource: Int = defaultImageRes,
-                  errorResource: Int = brokenImageRes,
-                  maxWidth: Int? = null,
-                  maxHeight: Int? = null,
-                  scaleType: ImageView.ScaleType? = ImageView.ScaleType.CENTER_INSIDE
+    fun loadImage(
+            requestUrl: String,
+            targetView: ImageView,
+            preloaderResource: Int = preloaderImageRes,
+            defaultResource: Int = defaultImageRes,
+            errorResource: Int = brokenImageRes,
+            maxWidth: Int? = null,
+            maxHeight: Int? = null,
+            scaleType: ImageView.ScaleType? = ImageView.ScaleType.CENTER_INSIDE
     ) {
+        launch (UI) {
+            targetView.setImageResource(preloaderResource)
+        }
         val imageListener = ImageLoader.getImageListener(
                 targetView,
                 defaultResource,
