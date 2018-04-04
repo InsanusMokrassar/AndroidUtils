@@ -3,6 +3,7 @@ package com.github.insanusmokrassar.SimpleAndroidRequests
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.RetryPolicy
@@ -28,7 +29,7 @@ fun Application.getRequestsHelper(): RequestsHelper {
 }
 
 class RequestsHelper internal constructor (c: Context) {
-    var defaultRetryPolicy: RetryPolicy? = null
+    var defaultRetryPolicyCreator: ((Request<*>) -> RetryPolicy) = { DefaultRetryPolicy() }
         set(value) {
             Log.d(this::class.java.simpleName, "Default retry policy was changed for: $this; value: $value")
             field = value
@@ -75,7 +76,7 @@ class RequestsHelper internal constructor (c: Context) {
             errorListener: Response.ErrorListener,
             paramsBuilder: () -> IInputObject<String, Any> = { SimpleIObject() },
             priority: Request.Priority = Request.Priority.NORMAL,
-            retryPolicy: RetryPolicy? = defaultRetryPolicy
+            retryPolicy: RetryPolicy? = null
     ) {
         Log.i("Requests bus", "Try to add request for: $url")
         val request = SimpleRequest(
@@ -86,7 +87,7 @@ class RequestsHelper internal constructor (c: Context) {
                 paramsBuilder,
                 priority
         ).also {
-            it.retryPolicy = retryPolicy ?: it.retryPolicy
+            it.retryPolicy = retryPolicy ?: defaultRetryPolicyCreator(it)
         }
         execute(request)
     }
