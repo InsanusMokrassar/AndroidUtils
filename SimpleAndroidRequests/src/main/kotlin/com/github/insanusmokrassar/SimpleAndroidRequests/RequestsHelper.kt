@@ -85,9 +85,8 @@ class RequestsHelper internal constructor (c: Context) {
                 errorListener,
                 paramsBuilder,
                 priority
-        )
-        retryPolicy ?.let {
-            request.retryPolicy = it
+        ).also {
+            it.retryPolicy = retryPolicy ?: it.retryPolicy
         }
         execute(request)
     }
