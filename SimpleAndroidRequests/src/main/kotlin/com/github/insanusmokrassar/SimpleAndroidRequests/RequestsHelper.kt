@@ -15,6 +15,7 @@ import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
 import com.github.insanusmokrassar.IObjectKRealisations.toStringMap
 import com.github.insanusmokrassar.IObjectK.extensions.iterator
 import com.github.insanusmokrassar.IObjectK.interfaces.IInputObject
+import java.util.concurrent.ConcurrentLinkedQueue
 
 private val cache = HashMap<String, RequestsHelper>()
 
@@ -36,39 +37,32 @@ class RequestsHelper internal constructor (c: Context) {
         }
 
     private val executeQueue = Volley.newRequestQueue(c)
-    private var readyToSend = true
-    private val requestsQueue = ArrayList<Request<*>>()
+    private val requestsQueue = ConcurrentLinkedQueue<Request<*>>()
+    private val blockRequestsQueue = ConcurrentLinkedQueue<Request<*>>()
 
-    private val sync = Object()
-    private val syncQueuesThread = Thread({
-        synchronized(sync, {
-            try {
-                while (true) {
-                    while (requestsQueue.isEmpty() || !readyToSend) {
-                        sync.wait()
-                    }
-                    executeQueue.add(requestsQueue.removeAt(0))
-                    readyToSend = false
-                }
-            } catch (e: Exception) {
-                Log.w(this::class.java.simpleName, "REQUESTS SYNCHRONISATION WAS STOPPED", e)
+    private var currentRequest: Request<*>? = null
+        @Synchronized
+        set(value) {
+            val oldValue = field
+            field = value
+            value ?.let {
+                executeQueue.add(it)
+            } ?:let {
+                oldValue ?.let { blockRequestsQueue.remove(it) }
+                triggerExecuteRequest()
             }
-        })
-    })
+        }
 
     init {
         executeQueue.addRequestFinishedListener<Any> {
             Log.i("Requests listener", "Request $it is finished")
-            synchronized(sync, {
-                readyToSend = true
-                sync.notify()
-            })
+            currentRequest = null
         }
         executeQueue.start()
-        syncQueuesThread.start()
     }
 
 
+    @Synchronized
     fun execute(
             url: String,
             method: Int,
@@ -76,7 +70,8 @@ class RequestsHelper internal constructor (c: Context) {
             errorListener: Response.ErrorListener,
             paramsBuilder: () -> IInputObject<String, Any> = { SimpleIObject() },
             priority: Request.Priority = Request.Priority.NORMAL,
-            retryPolicy: RetryPolicy? = null
+            retryPolicy: RetryPolicy? = null,
+            block: Boolean = false
     ) {
         Log.i("Requests bus", "Try to add request for: $url")
         val request = SimpleRequest(
@@ -89,29 +84,41 @@ class RequestsHelper internal constructor (c: Context) {
         ).also {
             it.retryPolicy = retryPolicy ?: defaultRetryPolicyCreator(it)
         }
-        execute(request)
+        execute(request, block)
     }
 
+    @Synchronized
     fun <T> execute(
-            request: Request<T>
+            request: Request<T>,
+            block: Boolean = false
     ) {
         try {
-            Log.i("Requests bus", "Try to add request: $request")
-            synchronized(sync, {
-                request.sequence = executeQueue.sequenceNumber
-                requestsQueue.add(request)
-                requestsQueue.sortWith(
-                        Comparator { first, second -> first.priority.compareTo(second.priority) }
-                )
-                sync.notify()
-            })
+            request.sequence = executeQueue.sequenceNumber
+            if (block) {
+                blockRequestsQueue.offer(request)
+                Log.d(RequestsHelper::class.java.simpleName, "Blocked queue: $blockRequestsQueue")
+            } else {
+                requestsQueue.offer(request)
+                Log.d(RequestsHelper::class.java.simpleName, "Async queue: $requestsQueue")
+            }
+            triggerExecuteRequest()
         } catch (e: NullPointerException) {
             Log.e("Requests bus", "RequestsQueue is not ready", e)
         }
     }
 
+    private fun triggerExecuteRequest() {
+        currentRequest ?:let {
+            while (blockRequestsQueue.isEmpty() && requestsQueue.isNotEmpty()) {
+                executeQueue.add(requestsQueue.poll())
+            }
+            if (blockRequestsQueue.isNotEmpty()) {
+                currentRequest = blockRequestsQueue.peek()
+            }
+        }
+    }
+    
     fun stop() {
-        syncQueuesThread.interrupt()
         requestsQueue.clear()
         executeQueue.cancelAll { true }
     }
