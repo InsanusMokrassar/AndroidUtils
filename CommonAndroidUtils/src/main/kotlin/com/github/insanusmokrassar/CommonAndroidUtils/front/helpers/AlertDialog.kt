@@ -84,6 +84,22 @@ fun Context.createEditTextDialog(
         inputType: Int = InputType.TYPE_CLASS_TEXT,
         show: Boolean = true
 ): AlertDialog {
+    return createEditTextDialog(
+            callback,
+            titleRes ?.let { getString(it) },
+            editTextHintRes ?.let { getString(it) },
+            inputType,
+            show
+    )
+}
+
+fun Context.createEditTextDialog(
+        callback: (String) -> Boolean,
+        title: String? = null,
+        editTextHint: String? = null,
+        inputType: Int = InputType.TYPE_CLASS_TEXT,
+        show: Boolean = true
+): AlertDialog {
 
     val editText = AppCompatEditText(this)
     val lp = LinearLayout.LayoutParams(
@@ -93,8 +109,8 @@ fun Context.createEditTextDialog(
     editText.layoutParams = lp
     editText.inputType = inputType
 
-    editTextHintRes ?. let {
-        editText.setHint(it)
+    editTextHint ?. let {
+        editText.hint = it
     }
 
     val builder = AlertDialog.Builder(this)
@@ -107,7 +123,7 @@ fun Context.createEditTextDialog(
                         canBeClosed = callback(editText.text.toString())
                     }
             )
-    titleRes ?.let {
+    title ?.let {
         builder.setTitle(it)
     }
     val dialog = builder.create()

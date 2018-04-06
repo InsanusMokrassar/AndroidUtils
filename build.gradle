@@ -1,7 +1,8 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
     ext.kotlin_coroutines_version = '0.22.3'
-    ext.build_tools_version = '27.0.2'
+    ext.build_tools_version = '27.0.3'
+    ext.support_libraries_version = '27.1.0'
 
     ext.iobject_version = '1.9'
     ext.iobject_realisations_version = '1.9.3'

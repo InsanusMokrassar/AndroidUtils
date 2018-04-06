@@ -70,8 +70,8 @@ class RecyclerViewAdapter<T>(
         holder.refreshItem(data[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AbstractViewHolder<T> =
-            viewHolderFactory(parent!!, viewType, this)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<T> =
+            viewHolderFactory(parent, viewType, this)
 
     private fun checkEmpty() {
         emptyView ?. let {

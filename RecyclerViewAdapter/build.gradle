@@ -41,8 +41,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // Front
-    implementation "com.android.support:appcompat-v7:$build_tools_version"
-    implementation "com.android.support:design:$build_tools_version"
+    implementation "com.android.support:appcompat-v7:$support_libraries_version"
+    implementation "com.android.support:design:$support_libraries_version"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
