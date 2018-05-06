@@ -124,7 +124,7 @@ class RequestsHelper internal constructor (c: Context) {
     }
 }
 
-class SimpleRequest(
+open class SimpleRequest(
         url: String,
         method: Int,
         successResponse: (String) -> Unit,
