@@ -208,12 +208,23 @@ fun constructServerRequestUrl(
         requestUrlTemplatePostfixResId: Int,
         vararg params: String
 ): String {
+    return constructServerRequestUrl(
+        c.getString(requestUrlTemplateResId),
+        c.getString(requestUrlTemplatePostfixResId),
+        *params
+    )
+}
+
+fun constructServerRequestUrl(
+        requestUrlTemplate: String,
+        requestUrlTemplatePostfix: String,
+        vararg params: String
+): String {
     return String.format(
-            c.getString(requestUrlTemplateResId),
+            requestUrlTemplate,
             String.format(
-                    c.getString(requestUrlTemplatePostfixResId),
+                    requestUrlTemplatePostfix,
                     *params
             )
     )
 }
-
