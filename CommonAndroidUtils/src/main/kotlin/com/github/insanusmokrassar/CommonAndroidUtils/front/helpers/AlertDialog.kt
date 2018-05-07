@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.github.insanusmokrassar.CommonAndroidUtils.R
 
@@ -47,6 +46,20 @@ fun Context.createRecyclerViewDialog(
         layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this),
         show: Boolean = true
 ): AlertDialog {
+    return createRecyclerViewDialog(
+        getString(titleRes),
+        adapterFactory,
+        layoutManager,
+        show
+    )
+}
+
+fun Context.createRecyclerViewDialog(
+    title: String,
+    adapterFactory: () -> RecyclerView.Adapter<*>,
+    layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this),
+    show: Boolean = true
+): AlertDialog {
     val recyclerView = RecyclerView(this)
     val lp = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -65,7 +78,7 @@ fun Context.createRecyclerViewDialog(
 
     val builder = AlertDialog.Builder(this)
 
-    builder.setTitle(titleRes)
+    builder.setTitle(title)
             .setView(recyclerView)
 
     return if (show) {
