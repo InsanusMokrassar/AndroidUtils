@@ -7,10 +7,10 @@ import android.os.Parcelable
 
 
 
-class FragmentViewPagerAdapter(
-        private val fragments: List<Fragment>,
+open class FragmentViewPagerAdapter(
+        protected val fragments: List<Fragment>,
         fm: FragmentManager,
-        private val fragmentToTitleConverter: (Int, Fragment) -> String? = { _, _ -> null }
+        protected val fragmentToTitleConverter: (Int, Fragment) -> String? = { _, _ -> null }
 ) : FragmentStatePagerAdapter(fm) {
     override fun getItem(position: Int): Fragment = fragments[position]
     override fun getCount(): Int = fragments.size
@@ -20,23 +20,4 @@ class FragmentViewPagerAdapter(
                 getItem(position)
         )
     }
-
-    //-----------------------for uncaching oldest fragments
-    override fun saveState(): Parcelable? {
-        uncacheFragments()
-        return null
-    }
-
-    private fun uncacheFragments() {
-        fragments.forEach {
-            fragment ->
-            try {
-                fragment.fragmentManager ?. beginTransaction() ?.let {
-                    it.remove(fragment)
-                    it.commit()
-                }
-            } catch (e: NullPointerException) { }
-        }
-    }
-
 }
