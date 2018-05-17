@@ -51,7 +51,7 @@ dependencies {
     implementation "com.github.insanusmokrassar:IObjectK:$iobject_version"
 
     // Common. Trusted.
-    implementation 'com.mcxiaoke.volley:library:1.0.19'
+    implementation 'com.android.volley:volley:1.1.0'
 }
 
 install {
