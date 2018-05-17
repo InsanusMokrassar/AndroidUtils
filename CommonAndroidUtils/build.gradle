@@ -50,7 +50,6 @@ dependencies {
     implementation "com.github.insanusmokrassar:IObjectK:$iobject_version"
 
     // Common. Trusted.
-    implementation 'com.mcxiaoke.volley:library:1.0.19'
     implementation 'com.google.code.gson:gson:2.8.1'
 }
 
