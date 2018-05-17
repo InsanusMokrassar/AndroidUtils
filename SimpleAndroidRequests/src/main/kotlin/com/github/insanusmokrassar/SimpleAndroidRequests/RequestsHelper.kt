@@ -13,7 +13,6 @@ import com.github.insanusmokrassar.IObjectK.extensions.asMap
 import com.github.insanusmokrassar.IObjectK.interfaces.IObject
 import com.github.insanusmokrassar.IObjectK.realisations.SimpleIObject
 import com.github.insanusmokrassar.IObjectKRealisations.toStringMap
-import com.github.insanusmokrassar.IObjectK.extensions.iterator
 import com.github.insanusmokrassar.IObjectK.interfaces.IInputObject
 import java.util.concurrent.ConcurrentLinkedQueue
 
