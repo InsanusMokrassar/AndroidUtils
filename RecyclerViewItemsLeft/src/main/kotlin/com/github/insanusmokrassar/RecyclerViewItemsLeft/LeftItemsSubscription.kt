@@ -17,12 +17,12 @@ internal class LeftItemsSubscription : (Int) -> Unit {
     }
 
     override fun invoke(next: Int) {
-        filters.forEach {
-            t, u ->
+        filters.keys.forEach {
+            checker ->
             launch {
                 try {
-                    if (t(next)) {
-                        u.forEach {
+                    if (checker(next)) {
+                        filters[checker] ?.forEach {
                             launch {
                                 try {
                                     it(next)
@@ -39,7 +39,7 @@ internal class LeftItemsSubscription : (Int) -> Unit {
                 } catch (e: Exception) {
                     Log.d(
                         this@LeftItemsSubscription::class.java.simpleName,
-                        "Can't check event update need by $t",
+                        "Can't check event update need by $checker",
                         e
                     )
                 }
