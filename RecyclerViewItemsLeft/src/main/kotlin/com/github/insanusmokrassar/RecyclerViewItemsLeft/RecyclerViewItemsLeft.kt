@@ -2,13 +2,7 @@ package com.github.insanusmokrassar.RecyclerViewItemsLeft
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import java.util.*
-
-typealias LeftItemsCallback = (Int) -> Unit
-typealias LeftItemsFilter = (Int) -> Boolean
-typealias LeftItemsSubscription = Observable<Int>
 
 private val weakLeftItemsMap = WeakHashMap<RecyclerView, LeftItemsSubscription>()
 
@@ -31,25 +25,24 @@ fun RecyclerView.subscribeItemsLeft(
         callback: LeftItemsCallback,
         filter: LeftItemsFilter
 ) {
-    weakLeftItemsMap[this] ?.let {
-        it.filter(filter).subscribe(callback)
-    } ?:let {
-        weakLeftItemsMap[this] = PublishSubject.create<Int>().also {
-            subject ->
-            val layoutManager = layoutManager
-            when (layoutManager) {
-                is LinearLayoutManager -> addOnScrollListener(
-                        LinearLayoutManagerLeftItemsListener(
-                                layoutManager,
-                                {
-                                    subject.onNext(it)
-                                }
-                        )
+    (weakLeftItemsMap[this] ?:let {
+        val layoutManager = layoutManager
+        when (layoutManager) {
+            is LinearLayoutManager -> LeftItemsSubscription().also {
+                subscription ->
+                weakLeftItemsMap[this] = subscription
+                addOnScrollListener(
+                    LinearLayoutManagerLeftItemsListener(
+                        layoutManager,
+                        {
+                            subscription(it)
+                        }
+                    )
                 )
             }
+            else -> throw IllegalStateException("RecyclerView must use ${LinearLayoutManager::class.java.canonicalName} or it")
         }
-        subscribeItemsLeft(callback, filter)
-    }
+    }).addFilter(filter, callback)
 }
 
 private class LinearLayoutManagerLeftItemsListener(
