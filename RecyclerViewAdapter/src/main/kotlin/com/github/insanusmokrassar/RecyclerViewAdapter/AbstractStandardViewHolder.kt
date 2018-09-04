@@ -8,9 +8,9 @@ abstract class AbstractStandardViewHolder<T>(
         inflater: LayoutInflater,
         container: ViewGroup?,
         viewId: Int,
-        onViewInflated: (View) -> Unit = { }
-) : AbstractViewHolder<T>({
-    val view = inflater.inflate(viewId, container, false)
-    onViewInflated(view)
-    view
-})
+        onViewInflated: ((View) -> Unit)? = null
+) : AbstractViewHolder<T>(
+    inflater.inflate(viewId, container, false).also {
+        onViewInflated ?.invoke(it)
+    }
+)

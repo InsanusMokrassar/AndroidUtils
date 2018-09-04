@@ -2,21 +2,11 @@ package com.github.insanusmokrassar.RecyclerViewAdapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.view.ViewGroup
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
-class RecyclerViewAdapter<T>(
-        private val viewHolderFactory: (
-                parent: ViewGroup,
-                viewType: Int,
-                adapter: RecyclerViewAdapter<T>
-        ) -> AbstractViewHolder<T>,
-        val data: List<T>,
-        private val viewTypeFactory: (
-                index: Int,
-                current: T
-        ) -> Int = { _, _ -> 0 }
+abstract class RecyclerViewAdapter<T>(
+        val data: List<T>
 ): RecyclerView.Adapter<AbstractViewHolder<T>>() {
     var emptyView: View? = null
         set(value) {
@@ -61,17 +51,11 @@ class RecyclerViewAdapter<T>(
         checkEmpty()
     }
 
-    override fun getItemViewType(position: Int): Int
-            = viewTypeFactory(position, data[position])
-
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: AbstractViewHolder<T>, position: Int) {
-        holder.refreshItem(data[position])
+        holder.onBind(data[position])
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<T> =
-            viewHolderFactory(parent, viewType, this)
 
     private fun checkEmpty() {
         emptyView ?. let {
